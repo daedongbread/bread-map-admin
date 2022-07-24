@@ -1,7 +1,8 @@
 import React from 'react';
 
 const Tess = () => {
-  return <div>hello</div>;
+  console.log('tess');
+  return <div>Tess</div>;
 };
 
 export default Tess;

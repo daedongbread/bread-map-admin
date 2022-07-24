@@ -1,12 +1,13 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 
-const Test: React.FC = () => {
+const Layout = () => {
   return (
     <div>
-      <div>test</div>
+      Layout
+      <Outlet />
     </div>
   );
 };
 
-export default Test;
+export default Layout;

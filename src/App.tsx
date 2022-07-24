@@ -1,46 +1,23 @@
 import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Layout from '@/components/Layout';
+import Tess from '@/components/Tess';
 import Test from '@/components/Test';
 import './App.css';
-import logo from './logo.svg';
 
 function App() {
   const [count, setCount] = useState(0);
-
+  // / => /bakery로 이동시키기
   return (
-    <div className="App">
-      <Test />
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount(count => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Test />} />
+          <Route path="bakery" element={<Test />} />
+          <Route path="bakery/:id" element={<Tess />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 }
 
