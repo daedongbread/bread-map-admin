@@ -45,7 +45,7 @@ module.exports = {
         semi: true, // 명령문 끝에 세미콜론 추가
         singleQuote: true, // 작은 따옴표 사용
         tabWidth: 2, // 들여쓰기 공백 수 설정
-        trailingComma: 'all', // 후행 쉼표 추가
+        trailingComma: 'es5', // 후행 쉼표 추가
         useTabs: false, // tab 대신 space 사용
       },
     ],

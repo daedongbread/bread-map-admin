@@ -20,6 +20,16 @@ const style = css`
     font-size: 1rem;
     font-weight: normal;
   }
+
+  button {
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+
+  ul {
+    list-style: none;
+  }
 `;
 
 export const GlobalStyle = () => {

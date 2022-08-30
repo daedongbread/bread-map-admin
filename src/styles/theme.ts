@@ -7,6 +7,7 @@ export const size = {
 };
 
 export const color = {
+  white: '#FFFFFF',
   gray900: '#222222',
   gray800: '#424242',
   gray700: '#616161',
@@ -23,6 +24,8 @@ export const color = {
   primary200: '#FFC5B3',
   primary100: '#FFF1EC',
   prmary50: '#FFF6F4',
+  green: '#1EC780',
+  red: '#F3213B',
 };
 
 export const theme = {

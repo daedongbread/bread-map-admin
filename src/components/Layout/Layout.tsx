@@ -1,7 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { SearchBar } from '../Shared/SearchBar/SearchBar';
 import { SideBar } from './SideBar';
 
 export const Layout = () => {
@@ -22,8 +21,7 @@ const Container = styled.div`
   width: 100%;
   height: 100vh;
 
-  aside {
-    width: 300px;
+  > aside {
     border-right: ${({ theme }) => `1px solid ${theme.color.gray200}`};
   }
 

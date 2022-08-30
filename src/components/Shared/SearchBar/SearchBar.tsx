@@ -10,7 +10,9 @@ export const SearchBar = ({ placeholder }: Props) => {
   return (
     <Container>
       <Input placeholder={placeholder} />
-      <Search />
+      <button>
+        <Search />
+      </button>
     </Container>
   );
 };
@@ -18,19 +20,20 @@ export const SearchBar = ({ placeholder }: Props) => {
 const Container = styled.div`
   position: relative;
 
-  svg {
+  button {
     position: absolute;
-    top: 45%;
+    top: 43%;
     right: 22px;
-    transform: scale(0.8) translateY(-50%);
+    transform: scale(0.7) translateY(-50%);
   }
 `;
 
 const Input = styled.input`
-  padding: 2.1rem 2.3rem;
+  padding: 1.8rem 2.3rem;
   border-radius: 16px;
   width: 100%;
   border: ${({ theme }) => `1px solid ${theme.color.gray400}`};
+  outline: none;
 
   ::placeholder {
     font-size: 1.5rem;
