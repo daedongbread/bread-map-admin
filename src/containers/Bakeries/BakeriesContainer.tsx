@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Column } from 'react-table';
-import { BakeryTable } from '@/components/Bakery';
+import { BakeriesTable } from '@/components/Bakeries';
 import { Button } from '@/components/Shared/Button';
 import { CompleteStatus as Status } from '@/components/Shared/CompleteStatus';
 import type { CompleteStatusProps as StatusProps } from '@/components/Shared/CompleteStatus';
@@ -19,7 +19,7 @@ type Bakery = {
   use: boolean;
 };
 
-export const BakeryContainer = () => {
+export const BakeriesContainer = () => {
   const columns: (Column & { percentage: number })[] = [
     { accessor: 'id', Header: 'Bakery_ID', percentage: 10 },
     { accessor: 'name', Header: '빵집이름', percentage: 25 },
@@ -30,16 +30,12 @@ export const BakeryContainer = () => {
       accessor: 'use',
       Header: '상태',
       percentage: 10,
-      Cell: ({ cell: { value } }) => (
-        <Status color={value.color} text={value.text} />
-      ),
+      Cell: ({ cell: { value } }) => <Status color={value.color} text={value.text} />,
     },
   ];
 
   // 임시데이터
-  const data: TableData<
-    Omit<Bakery, 'use'> & { use: StatusProps; notification: string }
-  > = [
+  const data: TableData<Omit<Bakery, 'use'> & { use: StatusProps; notification: string }> = [
     {
       id: 1,
       name: '루엘드파리',
@@ -64,25 +60,17 @@ export const BakeryContainer = () => {
   const TOTAL_COUNT = 500;
   const PER_COUNT = 15;
 
-  const {
-    currPage,
-    leftPosition,
-    onClickPage,
-    onClickNext,
-    onClickPrev,
-    onClickEnd,
-    onClickStart,
-  } = usePagination(TOTAL_COUNT, PER_COUNT);
+  const { currPage, leftPosition, onClickPage, onClickNext, onClickPrev, onClickEnd, onClickStart } = usePagination(TOTAL_COUNT, PER_COUNT);
 
   return (
-    <>
+    <Container>
       <TopContainer>
         <SearchBarWrapper>
-          <SearchBar placeholder="빵집 이름으로 검색하기" />
+          <SearchBar placeholder={'빵집 이름으로 검색하기'} />
         </SearchBarWrapper>
-        <Button text={'신규등록'} type={'orange'} size={'small'} />
+        <Button text={'신규등록'} type={'orange'} btnSize={'medium'} />
       </TopContainer>
-      <BakeryTable columns={bakeryColumns} data={bakeryData} />
+      <BakeriesTable columns={bakeryColumns} data={bakeryData} />
       <Pagination
         totalCount={TOTAL_COUNT}
         perCount={PER_COUNT}
@@ -94,9 +82,13 @@ export const BakeryContainer = () => {
         onClickEnd={onClickEnd}
         onClickStart={onClickStart}
       />
-    </>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  padding: 3rem 6rem;
+`;
 
 const TopContainer = styled.div`
   display: flex;

@@ -1,2 +1,3 @@
-export { SelectBox } from './SelectBox';
-export type { SelectOption, SelectBoxProps } from './SelectBox';
+export { GraySelectBox } from './GraySelectBox';
+export { StatusSelectBox } from './StatusSelectBox';
+export type { SelectOption, SelectBoxProps } from './GraySelectBox';

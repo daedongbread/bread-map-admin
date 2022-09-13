@@ -4,38 +4,54 @@ import styled from '@emotion/styled';
 type MenuItemProps = {
   icon: ReactNode;
   name: string;
-  noti: number;
+  active: boolean;
+  noti?: number;
 };
 
-export const MenuItem = ({ icon, name, noti }: MenuItemProps) => {
+export const MenuItem = ({ icon, name, active, noti }: MenuItemProps) => {
   return (
-    <ItemContainer>
-      <a href="#">
+    <ItemContainer active={active}>
+      <div>
         {icon}
         <span>{name}</span>
-        <Notification>{noti}</Notification>
-      </a>
+        {noti && <Notification>{noti}</Notification>}
+      </div>
     </ItemContainer>
   );
 };
 
-const ItemContainer = styled.li`
+const ItemContainer = styled.li<{ active: boolean }>`
   padding: 1.6rem 2.7rem 1.6rem 2.2rem;
+  position: relative;
 
-  a {
+  &:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background-color: ${({ theme }) => theme.color.primary500};
+    opacity: ${({ active }) => (active ? '1' : '0')};
+  }
+
+  > div {
     width: 100%;
     display: flex;
     align-items: center;
-
-    text-decoration: none;
     color: ${({ theme }) => theme.color.gray900};
     font-weight: bold;
     font-size: 1.4rem;
   }
 
+  path {
+    stroke: ${({ active, theme }) => (active ? `${theme.color.primary500}` : `${theme.color.gray900}`)};
+  }
+
   span {
     margin-left: 2rem;
     flex: 1;
+    color: ${({ active, theme }) => (active ? theme.color.primary500 : theme.color.gray900)};
   }
 `;
 

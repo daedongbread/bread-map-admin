@@ -1,52 +1,39 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import styled from '@emotion/styled';
 import { ChevronDown } from '../Icons';
 
 export type SelectOption = {
   name: string;
-  [key: string]: any;
+  [key: string]: any; // 왜 이렇게 준거지..? value로 하면되지않나?
 };
 
 export type SelectBoxProps = {
   isOpen: boolean;
   width?: number;
-  options?: SelectOption[]; // children 안주면 필수
+  options: SelectOption[];
   onToggleSelectBox: () => void;
   selectedOption: SelectOption | null;
   onSelectOption: (option: SelectOption) => void;
-  children?: ReactNode;
 };
 
-export const SelectBox = ({
-  isOpen,
-  width,
-  options,
-  onToggleSelectBox,
-  selectedOption,
-  onSelectOption,
-  children,
-}: SelectBoxProps) => {
+// TODO: 개발 필요
+// useSelectBox랑 이용
+export const StatusSelectBox = ({ isOpen, width, options, onToggleSelectBox, selectedOption, onSelectOption }: SelectBoxProps) => {
   console.log('rerender');
   return (
     <ContainerWrapper onClick={onToggleSelectBox} width={width}>
       <Container>
-        {children ? (
-          children
-        ) : (
-          <>
-            <SelectTrigger>
-              <span>{selectedOption?.name || '선택'}</span>
-              <ChevronDown />
-            </SelectTrigger>
-            <SelectOptions isOpen={isOpen}>
-              {options!.map((option, idx) => (
-                <Option key={idx} onClick={() => onSelectOption(option)}>
-                  {option.name}
-                </Option>
-              ))}
-            </SelectOptions>
-          </>
-        )}
+        <SelectTrigger>
+          <span>{selectedOption?.name || '선택'}</span>
+          <ChevronDown />
+        </SelectTrigger>
+        <SelectOptions isOpen={isOpen}>
+          {options.map((option, idx) => (
+            <Option key={idx} onClick={() => onSelectOption(option)}>
+              {option.name}
+            </Option>
+          ))}
+        </SelectOptions>
       </Container>
     </ContainerWrapper>
   );
@@ -56,15 +43,19 @@ export const ContainerWrapper = styled.div<{ width: number | undefined }>`
   position: relative;
   user-select: none;
   width: ${({ width }) => (width ? `${width}px` : '100%')};
-  margin-top: 1.2rem;
+
+  > span,
+  div {
+    font-size: 1.4rem;
+    color: ${({ theme }) => theme.color.gray900};
+    font-weight: 400;
+  }
 `;
 
 export const Container = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  border-width: 0 1px;
-  border-style: solid;
   border-color: #9f9f9f;
 `;
 
@@ -77,13 +68,12 @@ export const SelectTrigger = styled.div`
   font-size: 1.5rem;
   font-weight: 300;
   color: #3b3b3b;
-  height: 5rem;
-  line-height: 5rem;
-  background: #ffffff;
+  height: 4rem;
+  line-height: 4rem;
+  background: ${({ theme }) => theme.color.gray100};
   cursor: pointer;
-  border-width: 1px 0;
-  border-style: solid;
-  border-color: #9f9f9f;
+  border: ${({ theme }) => `1px solid ${theme.color.gray500}`};
+  border-radius: 10px;
 
   img {
     width: 1.5rem;
@@ -93,10 +83,10 @@ export const SelectTrigger = styled.div`
 export const SelectOptions = styled.div<{ isOpen: boolean }>`
   position: absolute;
   display: block;
-  top: 100%;
+  top: calc(100% + 10px);
   left: 0;
   right: 0;
-  outline: 1px solid #9f9f9f;
+  outline: ${({ theme }) => `1px solid ${theme.color.gray300}`};
   border-top: 0;
   background: #fff;
   transition: all 0.5s;
@@ -104,6 +94,8 @@ export const SelectOptions = styled.div<{ isOpen: boolean }>`
   visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
   pointer-events: ${({ isOpen }) => (isOpen ? 'all' : 'none')};
   z-index: 2;
+  border-radius: 10px;
+  overflow: hidden;
 `;
 
 export const Option = styled.div`
@@ -114,13 +106,13 @@ export const Option = styled.div`
   font-size: 1.5rem;
   font-weight: 300;
   color: #3b3b3b;
-  line-height: 5rem;
+  line-height: 4rem;
   cursor: pointer;
   transition: all 0.5s;
 
   &:hover {
     cursor: pointer;
-    background-color: #b2b2b2;
+    background-color: ${({ theme }) => theme.color.gray100};
   }
 `;
 

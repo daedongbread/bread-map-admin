@@ -1,4 +1,5 @@
 import React from 'react';
+import { Input } from '@/components/Shared/Input';
 import styled from '@emotion/styled';
 import { Search } from '../Icons';
 
@@ -9,7 +10,7 @@ type Props = {
 export const SearchBar = ({ placeholder }: Props) => {
   return (
     <Container>
-      <Input placeholder={placeholder} />
+      <Input placeholder={placeholder} type={'plain'} padding={'large'} />
       <button>
         <Search />
       </button>
@@ -25,17 +26,5 @@ const Container = styled.div`
     top: 43%;
     right: 22px;
     transform: scale(0.7) translateY(-50%);
-  }
-`;
-
-const Input = styled.input`
-  padding: 1.8rem 2.3rem;
-  border-radius: 16px;
-  width: 100%;
-  border: ${({ theme }) => `1px solid ${theme.color.gray400}`};
-  outline: none;
-
-  ::placeholder {
-    font-size: 1.5rem;
   }
 `;

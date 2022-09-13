@@ -1,14 +1,14 @@
-import React, { ReactNode } from 'react';
+import React, { MouseEvent, ReactNode } from 'react';
 import { color } from '@/styles';
 import styled from '@emotion/styled';
 
-type Btn = {
+type BtnStyles = {
   bgColor: string;
   fontColor: string;
   borderColor?: string;
 };
 
-const buttons: { [key: string]: Btn } = {
+const buttons: { [key: string]: BtnStyles } = {
   orange: {
     bgColor: color.primary500,
     fontColor: color.white,
@@ -16,6 +16,11 @@ const buttons: { [key: string]: Btn } = {
   lightOrange: {
     bgColor: color.primary400,
     fontColor: color.white,
+  },
+  reverseOrange: {
+    bgColor: color.white,
+    fontColor: color.primary500,
+    borderColor: color.primary500,
   },
   gray: {
     bgColor: color.gray500,
@@ -28,45 +33,46 @@ const buttons: { [key: string]: Btn } = {
   },
 };
 
-type BtnColor = 'orange' | 'lightOrange' | 'gray' | 'white';
+type BtnColor = 'orange' | 'lightOrange' | 'reverseOrange' | 'gray' | 'white';
 
-type BtnSize = 'large' | 'medium' | 'small';
+type Size = 'large' | 'medium' | 'small';
 
 type ButtonProps = {
   type: BtnColor;
-  size: BtnSize;
   text: string;
+  btnSize?: Size;
+  fontSize?: Size;
   icon?: ReactNode;
+  onClickBtn: (e: MouseEvent<HTMLButtonElement>) => void;
 };
 
-export const Button = ({ type, size, text, icon }: ButtonProps) => {
-  const button = Object.entries(buttons).find(([key, value]) => key === type)!;
+export const Button = ({ type, text, btnSize, fontSize = 'small', icon, onClickBtn }: ButtonProps) => {
+  const matchedStyle = Object.entries(buttons).find(([key]) => key === type);
+
+  if (!matchedStyle) return <button />;
+
   return (
-    <BtnStyle size={size} {...button?.[1]}>
+    <CustomBtn btnSize={btnSize} fontSize={fontSize} {...matchedStyle[1]} onClick={onClickBtn}>
       {icon}
       {text}
-    </BtnStyle>
+    </CustomBtn>
   );
 };
 
-const BtnStyle = styled.button<Btn & { size: BtnSize }>`
-  border-radius: 1rem;
-  font-weight: bold;
+// 기본 스타일을 확장해서 만들 수 있는지 확인 필요
+const CustomBtn = styled.button<BtnStyles & { btnSize?: Size; fontSize?: Size }>`
+  border-radius: 0.9rem;
   background-color: ${({ bgColor }) => bgColor};
+  border: ${({ borderColor }) => (borderColor ? `1px solid ${borderColor}` : 'none')};
+  padding: ${({ btnSize }) =>
+    btnSize === 'large' ? '2.2rem 2.8rem' : btnSize === 'medium' ? '1.2rem 2.2rem' : btnSize === 'small' ? '1rem 1.8rem' : '1.6rem 0'};
+  width: ${({ btnSize }) => !btnSize && '100%'};
+  font-weight: bold;
   color: ${({ fontColor }) => fontColor};
-  border: ${({ borderColor }) =>
-    borderColor ? `1px solid ${borderColor}` : 'none'};
-  padding: ${({ size }) =>
-    size === 'large'
-      ? '2.2rem 2.8rem'
-      : size === 'medium'
-      ? '1.2rem 5.4rem'
-      : '1rem 1.8rem'};
-  font-size: ${({ size }) =>
-    size === 'large' ? '2rem' : size === 'medium' ? '1.6rem' : '1.4rem'};
-
+  font-size: ${({ fontSize }) => (fontSize === 'large' ? '2rem' : fontSize === 'medium' ? '1.6rem' : '1.4rem')};
   display: flex;
   justify-content: center;
   align-items: center;
   // svg 위치 설정 필요
 `;
+// btnSize 없애고 위아래 패딩으로?..

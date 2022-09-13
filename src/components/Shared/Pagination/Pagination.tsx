@@ -14,6 +14,7 @@ type PaginationProps = {
   onClickStart: () => void;
 };
 
+// usePagination이랑 같이 사용
 export const Pagination = ({
   totalCount,
   perCount,
@@ -44,11 +45,7 @@ export const Pagination = ({
             {Array(totalPages)
               .fill('')
               .map((_, i) => (
-                <Li
-                  key={i}
-                  active={currPage === i + 1}
-                  onClick={() => onClickPage(i + 1)}
-                >
+                <Li key={i} active={currPage === i + 1} onClick={() => onClickPage(i + 1)}>
                   {i + 1}
                 </Li>
               ))}

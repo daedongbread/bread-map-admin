@@ -1,6 +1,9 @@
 enum Routes {
   LOGIN = '/login',
-  BAKERY = '/bakery',
+  BAKERIES = '/bakeries',
+  BAKERY_REQUEST = '/bakery-request',
+  USERS = '/users',
+  USER_REPORT = '/user-report',
 }
 
 export default Routes;

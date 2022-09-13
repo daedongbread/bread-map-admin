@@ -27,6 +27,5 @@ const Container = styled.div`
 
   main {
     flex: 1;
-    padding: 3rem 6rem;
   }
 `;

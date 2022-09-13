@@ -4,8 +4,7 @@ import styled from '@emotion/styled';
 import { TableProps } from './types';
 
 export const Table = ({ columns, data }: TableProps) => {
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data });
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data });
 
   if (columns.reduce((prev, curr) => prev + curr.percentage, 0) !== 100) {
     throw Error('table column의 percentage 합이 100이 되어야합니다.');
@@ -17,10 +16,7 @@ export const Table = ({ columns, data }: TableProps) => {
         {headerGroups.map((headerGroup: HeaderGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map((column: HeaderGroup, idx: number) => (
-              <Th
-                percentage={columns[idx].percentage}
-                {...column.getHeaderProps()}
-              >
+              <Th percentage={columns[idx].percentage} {...column.getHeaderProps()}>
                 {column.render('Header')}
               </Th>
             ))}
@@ -34,10 +30,7 @@ export const Table = ({ columns, data }: TableProps) => {
             <tr {...row.getRowProps()}>
               {row.cells.map((cell: Cell, idx: number) => {
                 return (
-                  <Td
-                    percentage={columns[idx].percentage}
-                    {...cell.getCellProps()}
-                  >
+                  <Td percentage={columns[idx].percentage} {...cell.getCellProps()}>
                     {cell.render('Cell')}
                   </Td>
                 );
