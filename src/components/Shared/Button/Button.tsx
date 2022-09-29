@@ -1,4 +1,4 @@
-import React, { MouseEvent, ReactNode } from 'react';
+import React from 'react';
 import { color } from '@/styles';
 import styled from '@emotion/styled';
 
@@ -42,17 +42,22 @@ type ButtonProps = {
   text: string;
   btnSize?: Size;
   fontSize?: Size;
-  icon?: ReactNode;
-  onClickBtn: (e: MouseEvent<HTMLButtonElement>) => void;
+  icon?: React.ReactNode;
+  onClickBtn: () => void;
 };
 
 export const Button = ({ type, text, btnSize, fontSize = 'small', icon, onClickBtn }: ButtonProps) => {
+  const onClickCustomBtn = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    onClickBtn();
+  };
+
   const matchedStyle = Object.entries(buttons).find(([key]) => key === type);
 
   if (!matchedStyle) return <button />;
 
   return (
-    <CustomBtn btnSize={btnSize} fontSize={fontSize} {...matchedStyle[1]} onClick={onClickBtn}>
+    <CustomBtn btnSize={btnSize} fontSize={fontSize} {...matchedStyle[1]} onClick={onClickCustomBtn}>
       {icon}
       {text}
     </CustomBtn>

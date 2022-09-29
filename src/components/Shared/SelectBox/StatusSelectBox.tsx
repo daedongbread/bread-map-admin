@@ -1,6 +1,6 @@
 import React from 'react';
+import { ChevronDown } from '@/components/Shared/Icons';
 import styled from '@emotion/styled';
-import { ChevronDown } from '../Icons';
 
 export type SelectOption = {
   name: string;

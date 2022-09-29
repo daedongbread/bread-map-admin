@@ -33,6 +33,12 @@ const style = css`
   ul {
     list-style: none;
   }
+
+  input[type='file'] {
+    position: absolute;
+    left: 99999px;
+    right: 99999px;
+  }
 `;
 
 export const GlobalStyle = () => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Logo } from '@/components/Login';
-import { Button } from '@/components/Shared/Button';
+import { Button } from '@/components/Shared';
 import styled from '@emotion/styled';
 
 export const LoginContainer = () => {

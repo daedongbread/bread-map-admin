@@ -1,29 +1,44 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
+import { Button, Input, Preview } from '@/components/Shared';
+import { BreadMenu } from '@/containers/BakeryDetail';
+import useFileInput from '@/hooks/useFileInput';
 import { Row } from '@/styles';
 import styled from '@emotion/styled';
-import { Button } from '../Shared/Button';
-import { Input } from '../Shared/Input';
-import { Preview } from '../Shared/Preview';
 
-const MenuItem = () => {
+type Props = {
+  idx: number;
+  menu: BreadMenu;
+  onChangeBreadMenuInput: (currIdx: number, currInput: 'name' | 'price' | 'image', value: string) => void;
+  onRemoveBreadMenu: (currIdx: number) => void;
+  onChangeBreadImg: (currIdx: number, e: ChangeEvent<HTMLInputElement>) => void;
+};
+
+const MenuItem = ({ idx, menu, onChangeBreadMenuInput, onRemoveBreadMenu, onChangeBreadImg }: Props) => {
+  const { inputRef, onClickTriggerFile, getSrc } = useFileInput();
+
+  const onChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
+    onChangeBreadImg(idx, e);
+  };
+
   return (
     <Container>
       <LeftContainer>
         <CustomRow>
           <label>메뉴명</label>
-          <Input type={'plain'} />
+          <Input name={'name'} value={menu.name} type={'plain'} onChangeInput={e => onChangeBreadMenuInput(idx, 'name', e.target.value)} />
         </CustomRow>
         <CustomRow>
           <label>가격</label>
-          <Input type={'plain'} />
+          <Input name={'price'} value={menu.price} type={'plain'} onChangeInput={e => onChangeBreadMenuInput(idx, 'price', e.target.value)} />
         </CustomRow>
         <BtnWrapper>
-          <Button text={'메뉴 삭제'} type={'gray'} btnSize={'small'} />
-          <Button text={'이미지 변경'} type={'lightOrange'} btnSize={'small'} />
+          <Button text={'메뉴 삭제'} type={'gray'} btnSize={'small'} onClickBtn={() => onRemoveBreadMenu(idx)} />
+          <Button text={'이미지 변경'} type={'lightOrange'} btnSize={'small'} onClickBtn={onClickTriggerFile} />
+          <input ref={inputRef} type="file" accept="image/png, image/jpeg" onChange={onChangeFile} />
         </BtnWrapper>
       </LeftContainer>
       <div>
-        <Preview widthRem={16} heightRem={16} src={null} />
+        <Preview widthRem={16} heightRem={16} src={getSrc(menu.image)} onClickTriggerFile={onClickTriggerFile} />
       </div>
     </Container>
   );

@@ -1,21 +1,36 @@
 import React from 'react';
-import { Input } from '@/components/Shared/Input';
+import { Button } from '@/components/Shared';
+import { BakeryForm } from '@/containers/BakeryDetail';
 import { Row, RowContents } from '@/styles';
 import styled from '@emotion/styled';
-import { Button } from '../Shared/Button';
 import MenuItem from './MenuItem';
 
 type Props = {
   label: string;
+  form: BakeryForm;
+  onChangeBreadMenuInput: (currIdx: number, currInput: 'name' | 'price' | 'image', value: string) => void;
+  onRemoveBreadMenu: (currIdx: number) => void;
+  onAddBreadMenu: () => void;
+  onChangeBreadImg: (currIdx: number, e: React.ChangeEvent<HTMLInputElement>) => void;
 };
-export const MenuForm = ({ label }: Props) => {
+
+export const MenuForm = ({ label, form, onChangeBreadMenuInput, onRemoveBreadMenu, onAddBreadMenu, onChangeBreadImg }: Props) => {
   return (
     <Row alignTop>
       <label>{label}</label>
       <RowContents>
-        <MenuItem />
+        {form.breadList.map((menu, idx) => (
+          <MenuItem
+            key={`menu-${idx}`}
+            idx={idx}
+            menu={menu}
+            onChangeBreadMenuInput={onChangeBreadMenuInput}
+            onRemoveBreadMenu={onRemoveBreadMenu}
+            onChangeBreadImg={onChangeBreadImg}
+          />
+        ))}
         <BtnWrapper>
-          <Button type={'lightOrange'} text={'추가하기'} btnSize={'small'} />
+          <Button type={'lightOrange'} text={'추가하기'} btnSize={'small'} onClickBtn={onAddBreadMenu} />
         </BtnWrapper>
       </RowContents>
     </Row>

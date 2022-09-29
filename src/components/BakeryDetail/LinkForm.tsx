@@ -1,8 +1,7 @@
-import React, { MouseEvent, useEffect, useState } from 'react';
+import React from 'react';
+import { Button, SelectOption } from '@/components/Shared';
 import { Row, RowContents } from '@/styles';
 import styled from '@emotion/styled';
-import { Button } from '../Shared/Button';
-import { SelectOption } from '../Shared/SelectBox';
 import LinkItem from './LinkItem';
 
 export type Option = {
@@ -40,10 +39,10 @@ const initialLink: Link[] = [
 ];
 
 export const LinkForm = ({ label, form, onChangeForm }: Props) => {
-  const [links, setLinks] = useState<Link[]>(initialLink);
-  const [openedLinkIdx, setOpenedLinkIdx] = useState<number | null>(null);
+  const [links, setLinks] = React.useState<Link[]>(initialLink);
+  const [openedLinkIdx, setOpenedLinkIdx] = React.useState<number | null>(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     links.forEach(link => {
       onChangeForm(link.value, link.url);
     });
@@ -103,8 +102,7 @@ export const LinkForm = ({ label, form, onChangeForm }: Props) => {
     setLinks([...updatedLinks]);
   };
 
-  const onAddLink = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  const onAddLink = () => {
     setLinks(prev => [...prev, { value: '', url: '' }]);
   };
 
@@ -114,11 +112,11 @@ export const LinkForm = ({ label, form, onChangeForm }: Props) => {
         <label>{label}</label>
         <CustomRowContents>
           <>
-            {links.map((_, idx) => (
+            {links.map((link, idx) => (
               <CustomRow key={`link-${idx}`}>
                 <LinkItem
                   idx={idx}
-                  link={links[idx]}
+                  link={link}
                   opened={openedLinkIdx === idx}
                   options={options}
                   onToggleLinkOption={onToggleLinkOption}

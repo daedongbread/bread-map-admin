@@ -10,6 +10,8 @@ type Props = {
   onChangeForm: (key: string, value: any) => void;
 };
 
+// type 입력받기. input or textarea
+// 시간에 대한 정보는 Textarea로 변경해야함
 export const BasicForm = ({ label, placeholder, name, form, onChangeForm }: Props) => {
   return (
     <Row>

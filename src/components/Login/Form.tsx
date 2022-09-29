@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input } from '@/components/Shared/Input';
+import { Input } from '@/components/Shared';
 import styled from '@emotion/styled';
 
 export const Form = () => {

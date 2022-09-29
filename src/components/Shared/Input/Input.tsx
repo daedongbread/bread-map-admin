@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React from 'react';
 import { color } from '@/styles';
 import styled from '@emotion/styled';
 
@@ -42,16 +42,18 @@ type InputProps = {
   type: InputStyleType;
   padding?: PaddingType;
   placeholder?: string;
-  onChangeInput: (e: ChangeEvent<HTMLInputElement>) => void;
+  onChangeInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  name?: string;
   value: string;
 };
 
-export const Input = ({ type, padding = 'small', placeholder, onChangeInput, value }: InputProps) => {
+export const Input = ({ type, padding = 'small', placeholder, onChangeInput, name, value }: InputProps) => {
   const matchedStyle = Object.entries(inputs).find(([key]) => key === type);
   if (!matchedStyle) return <input />;
 
   return (
     <CustomInput
+      name={name}
       value={value}
       onChange={onChangeInput}
       borderColor={matchedStyle[1].borderColor}

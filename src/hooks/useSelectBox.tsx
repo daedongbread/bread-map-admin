@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { SelectOption } from '@/components/Shared/SelectBox';
 
 const useSelectBox = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<SelectOption | null>(null);
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [selectedOption, setSelectedOption] = React.useState<SelectOption | null>(null);
 
   const onToggleSelectBox = () => {
     setIsOpen(prev => !prev);

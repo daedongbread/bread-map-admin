@@ -1,8 +1,7 @@
-import React, { ChangeEvent, MouseEvent, useEffect } from 'react';
+import React from 'react';
+import { Button, Input } from '@/components/Shared';
 import { GraySelectBox, SelectOption } from '@/components/Shared/SelectBox';
 import useSelectBox from '@/hooks/useSelectBox';
-import { Button } from '../Shared/Button';
-import { Input } from '../Shared/Input';
 import { Link, Option } from './LinkForm';
 
 type Props = {
@@ -24,12 +23,11 @@ const LinkItem = ({ idx, link, opened, options, onToggleLinkOption, onSelectLink
     onSelectLinkOption(idx, option);
   };
 
-  const onChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
+  const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChangeLinkUrl(idx, e.target.value);
   };
 
-  const onRemove = (e: MouseEvent<HTMLElement>) => {
-    e.preventDefault();
+  const onRemove = () => {
     onRemoveLink(idx);
   };
 
@@ -37,10 +35,13 @@ const LinkItem = ({ idx, link, opened, options, onToggleLinkOption, onSelectLink
     onToggleLinkOption(idx);
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     const option = options.find(option => option.value === link.value);
-    if (!option) onSelectOption(null);
-    else onSelectOption(option);
+    if (!option) {
+      onSelectOption(null);
+    } else {
+      onSelectOption(option);
+    }
   }, [link]);
 
   return (

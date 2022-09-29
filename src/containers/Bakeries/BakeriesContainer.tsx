@@ -1,12 +1,9 @@
 import React, { useMemo } from 'react';
 import { Column } from 'react-table';
 import { BakeriesTable } from '@/components/Bakeries';
-import { Button } from '@/components/Shared/Button';
-import { CompleteStatus as Status } from '@/components/Shared/CompleteStatus';
-import type { CompleteStatusProps as StatusProps } from '@/components/Shared/CompleteStatus';
-import { Pagination } from '@/components/Shared/Pagination';
-import { SearchBar } from '@/components/Shared/SearchBar';
-import { TableData } from '@/components/Shared/Table';
+import { Button, TableData, SearchBar, Pagination, CompleteStatus as Status } from '@/components/Shared';
+import type { CompleteStatusProps as StatusProps } from '@/components/Shared';
+
 import usePagination from '@/hooks/usePagination';
 import { bakeryUtils } from '@/utils';
 import styled from '@emotion/styled';

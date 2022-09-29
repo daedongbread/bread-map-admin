@@ -1,7 +1,7 @@
 import React from 'react';
-import { Input } from '@/components/Shared/Input';
+import { Input } from '@/components/Shared';
+import { Search } from '@/components/Shared/Icons';
 import styled from '@emotion/styled';
-import { Search } from '../Icons';
 
 type Props = {
   placeholder: string;
