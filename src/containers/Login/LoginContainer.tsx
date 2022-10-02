@@ -1,21 +1,37 @@
 import React from 'react';
-import { Form, Logo } from '@/components/Login';
+import { useRequestLogin } from '@/apis';
+import { Logo } from '@/components/Login';
+import { LoginForm } from '@/components/Login/LoginForm';
 import { Button } from '@/components/Shared';
+import Routes from '@/constants/routes';
+import useForm from '@/hooks/useForm';
+import useNavigation from '@/hooks/useNavigation';
 import styled from '@emotion/styled';
 
+export type LoginForm = typeof initialForm;
+
+const initialForm = {
+  email: '',
+  password: '',
+};
+
 export const LoginContainer = () => {
+  const { navigatePath } = useNavigation();
+  const { form, onChangeForm } = useForm<LoginForm>(initialForm);
+
+  const { mutate } = useRequestLogin({ successFn: () => navigatePath(Routes.BAKERIES) });
+
+  const onSubmit = () => {
+    const { email, password } = form;
+    mutate({ email, password });
+  };
+
   return (
     <Container>
       <Wrapper>
         <Logo />
-        <FormWrapper>
-          <Form />
-        </FormWrapper>
-        <CheckBox>
-          <input type="checkbox" id="remember" />
-          <label htmlFor="remember">ID/PW 기억하기</label>
-        </CheckBox>
-        <Button type={'orange'} text={'로그인'} />
+        <LoginForm form={form} onChangeForm={onChangeForm} />
+        <Button type={'orange'} text={'로그인'} onClickBtn={onSubmit} />
       </Wrapper>
     </Container>
   );

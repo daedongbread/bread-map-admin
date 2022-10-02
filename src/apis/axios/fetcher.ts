@@ -2,7 +2,7 @@ import axios from 'axios';
 import { reqFailFn, reqSuccessFn, resFailFn, resSuccessFn } from './interceptor';
 
 const fetcher = axios.create({
-  baseURL: import.meta.env.VITE_API_URI,
+  baseURL: `${import.meta.env.VITE_API_URI}/admin`,
   withCredentials: true,
 });
 

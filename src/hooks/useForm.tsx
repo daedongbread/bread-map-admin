@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 function useForm<T>(initialForm: T) {
-  const [form, setForm] = useState(initialForm);
+  const [form, setForm] = React.useState(initialForm);
+
   const onChangeForm = (key: string, value: any) => {
+    console.log('change', key);
     setForm({ ...form, [key]: value });
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     console.log('form', form);
   }, [form]);
+
   return { form, onChangeForm };
 }
 

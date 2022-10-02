@@ -38,7 +38,8 @@ type InputStyleType = 'plain' | 'gray' | 'disabled' | 'orange';
 
 type PaddingType = 'small' | 'large';
 
-type InputProps = {
+export type InputProps = {
+  textType?: string;
   type: InputStyleType;
   padding?: PaddingType;
   placeholder?: string;
@@ -47,13 +48,14 @@ type InputProps = {
   value: string;
 };
 
-export const Input = ({ type, padding = 'small', placeholder, onChangeInput, name, value }: InputProps) => {
+export const Input = ({ textType, type, padding = 'small', placeholder, onChangeInput, name, value }: InputProps) => {
   const matchedStyle = Object.entries(inputs).find(([key]) => key === type);
   if (!matchedStyle) return <input />;
 
   return (
     <CustomInput
       name={name}
+      type={textType}
       value={value}
       onChange={onChangeInput}
       borderColor={matchedStyle[1].borderColor}
