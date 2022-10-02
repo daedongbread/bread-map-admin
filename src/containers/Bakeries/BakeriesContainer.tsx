@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { Column } from 'react-table';
+import { BakeriesItemEntity, BakeriesItemStatus, useGetBakeries } from '@/apis';
 import { BakeriesTable } from '@/components/Bakeries';
 import { Button, TableData, SearchBar, Pagination, CompleteStatus as Status } from '@/components/Shared';
 import type { CompleteStatusProps as StatusProps } from '@/components/Shared';
@@ -8,56 +9,37 @@ import usePagination from '@/hooks/usePagination';
 import { bakeryUtils } from '@/utils';
 import styled from '@emotion/styled';
 
-type Bakery = {
-  id: number;
-  name: string;
-  createdAt: string;
-  modifiedAt: string;
-  use: boolean;
-};
+const columns: (Column & { percentage: number })[] = [
+  { accessor: 'bakeryId', Header: 'Bakery_ID', percentage: 10 },
+  { accessor: 'name', Header: '빵집이름', percentage: 25 },
+  { accessor: 'notification', Header: '알람', percentage: 35 },
+  { accessor: 'createdAt', Header: '최초 등록일', percentage: 10 },
+  { accessor: 'modifiedAt', Header: '마지막 수정일', percentage: 10 },
+  {
+    accessor: 'status',
+    Header: '상태',
+    percentage: 10,
+    Cell: ({ cell: { value } }) => <Status color={value.color} text={value.text} />,
+  },
+];
+
+const TOTAL_COUNT = 500;
+const PER_COUNT = 15;
+
+type BakeriesTableData = TableData<Omit<BakeriesItemEntity, 'status'> & { status: StatusProps; notification: string }>;
 
 export const BakeriesContainer = () => {
-  const columns: (Column & { percentage: number })[] = [
-    { accessor: 'id', Header: 'Bakery_ID', percentage: 10 },
-    { accessor: 'name', Header: '빵집이름', percentage: 25 },
-    { accessor: 'notification', Header: '알람', percentage: 35 },
-    { accessor: 'createdAt', Header: '최초 등록일', percentage: 10 },
-    { accessor: 'modifiedAt', Header: '마지막 수정일', percentage: 10 },
-    {
-      accessor: 'use',
-      Header: '상태',
-      percentage: 10,
-      Cell: ({ cell: { value } }) => <Status color={value.color} text={value.text} />,
-    },
-  ];
+  const [bakeries, setBakeries] = React.useState<BakeriesTableData>([]);
+  const { currPage, leftPosition, onClickPage, onClickNext, onClickPrev, onClickEnd, onClickStart } = usePagination(TOTAL_COUNT, PER_COUNT);
 
-  // 임시데이터
-  const data: TableData<Omit<Bakery, 'use'> & { use: StatusProps; notification: string }> = [
-    {
-      id: 1,
-      name: '루엘드파리',
-      notification: '',
-      createdAt: '2021-03-02',
-      modifiedAt: '2021-04-06',
-      use: bakeryUtils.formatUseColumn(false),
-    },
-    {
-      id: 2,
-      name: '서울앵무새',
-      notification: '',
-      createdAt: '2021-04-07',
-      modifiedAt: '2021-08-03',
-      use: bakeryUtils.formatUseColumn(true),
-    },
-  ];
+  React.useEffect(() => {
+    const { bakeries, loading } = useGetBakeries({ page: currPage });
+    // loading중일때 로딩화면 보여주기
+    console.log(currPage, 'bakeries', bakeries);
+    setBakeries(bakeries);
+  }, [currPage]);
 
   const bakeryColumns = useMemo(() => columns, []);
-  const bakeryData = useMemo(() => data, []);
-
-  const TOTAL_COUNT = 500;
-  const PER_COUNT = 15;
-
-  const { currPage, leftPosition, onClickPage, onClickNext, onClickPrev, onClickEnd, onClickStart } = usePagination(TOTAL_COUNT, PER_COUNT);
 
   return (
     <Container>
@@ -67,7 +49,7 @@ export const BakeriesContainer = () => {
         </SearchBarWrapper>
         <Button text={'신규등록'} type={'orange'} btnSize={'medium'} />
       </TopContainer>
-      <BakeriesTable columns={bakeryColumns} data={bakeryData} />
+      <BakeriesTable columns={bakeryColumns} data={bakeries} />
       <Pagination
         totalCount={TOTAL_COUNT}
         perCount={PER_COUNT}

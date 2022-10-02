@@ -50,12 +50,12 @@ const userSlice = createSlice({
     //   state.refreshToken = null;
     // },
   },
-  extraReducers: builder => {
-    builder.addCase(login.pending, (state, action) => {});
-    builder.addCase(login.fulfilled, (state, action) => {
-      action.payload.adminId;
-    });
-  },
+  // extraReducers: builder => {
+  //   builder.addCase(login.pending, (state, action) => {});
+  //   builder.addCase(login.fulfilled, (state, action) => {
+  //     action.payload.adminId;
+  //   });
+  // },
 });
 
 export default userSlice.reducer;
