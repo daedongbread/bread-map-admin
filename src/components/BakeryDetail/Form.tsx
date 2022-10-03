@@ -1,45 +1,56 @@
 import React from 'react';
 
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/Shared/Button';
+import { Button } from '@/components/Shared';
 import { BakeryForm } from '@/containers/BakeryDetail';
 
+import { BakeryFormChangeKey } from '@/store/slices/bakery';
 import styled from '@emotion/styled';
 
 import { AddressForm } from './AddressForm';
 import { BakeryImgForm } from './BakeryImgForm';
 import { BasicForm } from './BasicForm';
-import { LinkForm } from './LinkForm';
+import { Link, LinkForm } from './LinkForm';
 import { MenuForm } from './MenuForm';
 
 type Props = {
   form: BakeryForm;
+  links: Link[];
+  openedLinkIdx: number | null;
   bakeryImg: File | null;
-  onChangeForm: (key: string, value: any) => void;
+  onChangeForm: (payload: { name: BakeryFormChangeKey; value: never }) => void;
   onChangeBakeryImg: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onToggleLinkOption: (currIdx: number) => void;
+  onSelectLinkOption: (payload: { currIdx: number; optionValue: string; linkValue: string }) => void;
+  onChangeLinkValue: (payload: { currIdx: number; optionValue: string; linkValue: string }) => void;
+  onSetLinks: (links: { key: string; value: string }[]) => void;
+  onRemoveLink: (currIdx: number) => void;
+  onAddLink: () => void;
+  onChangeMenuInput: (payload: { currIdx: number; name: string; value: string }) => void;
+  onRemoveMenu: (currIdx: number) => void;
+  onAddMenu: () => void;
+  onChangeMenuImg: ({ currIdx, e }: { currIdx: number; e: React.ChangeEvent<HTMLInputElement> }) => void;
   onSaveForm: (payload: FormData) => void;
 };
 
-export const Form = ({ form, bakeryImg, onChangeForm, onChangeBakeryImg, onSaveForm }: Props) => {
-  const navigate = useNavigate();
-  const [links, setLinks] = React.useState<{ key: string; value: string }[]>([]);
-
-  React.useEffect(() => {
-    // 나중엔 최상위에서 객체 만들어서 내려주기만 하기
-    const links: { key: string; value: string }[] = [];
-    for (const [key, value] of Object.entries(form)) {
-      if (key.includes('URL')) {
-        links.push({ key, value: value as string });
-      }
-    }
-    console.log('links', links);
-    setLinks(links);
-  }, []);
-
-  const updateLinks = (links: { key: string; value: string }[]) => {
-    setLinks(links);
-  };
-
+export const Form = ({
+  form,
+  links,
+  openedLinkIdx,
+  bakeryImg,
+  onChangeForm,
+  onChangeBakeryImg,
+  onToggleLinkOption,
+  onSelectLinkOption,
+  onChangeLinkValue,
+  onSetLinks,
+  onRemoveLink,
+  onAddLink,
+  onChangeMenuInput,
+  onRemoveMenu,
+  onAddMenu,
+  onChangeMenuImg,
+  onSaveForm,
+}: Props) => {
   const onClickSave = () => {
     const formData = new FormData();
 
@@ -61,36 +72,7 @@ export const Form = ({ form, bakeryImg, onChangeForm, onChangeBakeryImg, onSaveF
     formData.append('bakeryImage', bakeryImg || '');
 
     const payload = formData;
-    // axios.post('/aaa', payload)~
-
     onSaveForm(payload);
-  };
-
-  const onChangeBreadMenuInput = (currIdx: number, currInput: 'name' | 'price' | 'image', value: string) => {
-    const breadMenus = form.menu.map((menu, idx) => {
-      if (idx === currIdx) return { ...menu, [currInput]: value };
-      else return menu;
-    });
-    onChangeForm('menu', breadMenus);
-  };
-
-  const onRemoveBreadMenu = (currIdx: number) => {
-    const breadMenus = form.menu.filter((menu, idx) => idx !== currIdx);
-    onChangeForm('menu', breadMenus);
-  };
-
-  const onAddBreadMenu = () => {
-    const breadMenus = [...form.menu, { breadId: 134, name: '', price: '', image: null }];
-    onChangeForm('menu', breadMenus);
-  };
-
-  const onChangeBreadImg = (currIdx: number, e: React.ChangeEvent<HTMLInputElement>) => {
-    const breadMenus = form.menu.map((menu, idx) => {
-      if (idx === currIdx) {
-        return { ...menu, image: e.target.files?.[0] };
-      } else return menu;
-    });
-    onChangeForm('menu', breadMenus);
   };
 
   return (
@@ -101,15 +83,25 @@ export const Form = ({ form, bakeryImg, onChangeForm, onChangeBakeryImg, onSaveF
           <BakeryImgForm label={'대표이미지'} previewImg={bakeryImg} onChangeBakeryImg={onChangeBakeryImg} />
           <AddressForm label={'주소'} form={form} onChangeForm={onChangeForm} />
           <BasicForm label={'시간'} form={form} onChangeForm={onChangeForm} name={'hours'} placeholder={'엔터키를 치면 줄바꿈이 적용됩니다.'} />
-          <LinkForm label={'홈페이지'} links={links} updateLinks={updateLinks} />
+          <LinkForm
+            label={'홈페이지'}
+            links={links}
+            openedLinkIdx={openedLinkIdx}
+            onToggleLinkOption={onToggleLinkOption}
+            onSelectLinkOption={onSelectLinkOption}
+            onChangeLinkValue={onChangeLinkValue}
+            onSetLinks={onSetLinks}
+            onRemoveLink={onRemoveLink}
+            onAddLink={onAddLink}
+          />
           <BasicForm label={'전화번호'} form={form} onChangeForm={onChangeForm} name={'phoneNumber'} placeholder={'000-000-0000'} />
           <MenuForm
             label={'메뉴'}
             form={form}
-            onChangeBreadMenuInput={onChangeBreadMenuInput}
-            onRemoveBreadMenu={onRemoveBreadMenu}
-            onAddBreadMenu={onAddBreadMenu}
-            onChangeBreadImg={onChangeBreadImg}
+            onChangeMenuInput={onChangeMenuInput}
+            onRemoveMenu={onRemoveMenu}
+            onAddMenu={onAddMenu}
+            onChangeMenuImg={onChangeMenuImg}
           />
         </div>
       </Forms>
@@ -120,8 +112,6 @@ export const Form = ({ form, bakeryImg, onChangeForm, onChangeBakeryImg, onSaveF
     </>
   );
 };
-
-/** style */
 
 const Forms = styled.form`
   flex: 1;

@@ -8,13 +8,13 @@ import MenuItem from './MenuItem';
 type Props = {
   label: string;
   form: BakeryForm;
-  onChangeBreadMenuInput: (currIdx: number, currInput: 'name' | 'price' | 'image', value: string) => void;
-  onRemoveBreadMenu: (currIdx: number) => void;
-  onAddBreadMenu: () => void;
-  onChangeBreadImg: (currIdx: number, e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangeMenuInput: (payload: { currIdx: number; name: string; value: string }) => void;
+  onRemoveMenu: (currIdx: number) => void;
+  onAddMenu: () => void;
+  onChangeMenuImg: ({ currIdx, e }: { currIdx: number; e: React.ChangeEvent<HTMLInputElement> }) => void;
 };
 
-export const MenuForm = ({ label, form, onChangeBreadMenuInput, onRemoveBreadMenu, onAddBreadMenu, onChangeBreadImg }: Props) => {
+export const MenuForm = ({ label, form, onChangeMenuInput, onRemoveMenu, onAddMenu, onChangeMenuImg }: Props) => {
   return (
     <Row alignTop>
       <label>{label}</label>
@@ -24,13 +24,13 @@ export const MenuForm = ({ label, form, onChangeBreadMenuInput, onRemoveBreadMen
             key={`menu-${idx}`}
             idx={idx}
             menu={item}
-            onChangeBreadMenuInput={onChangeBreadMenuInput}
-            onRemoveBreadMenu={onRemoveBreadMenu}
-            onChangeBreadImg={onChangeBreadImg}
+            onChangeMenuInput={onChangeMenuInput}
+            onRemoveMenu={onRemoveMenu}
+            onChangeMenuImg={onChangeMenuImg}
           />
         ))}
         <BtnWrapper>
-          <Button type={'lightOrange'} text={'추가하기'} btnSize={'small'} onClickBtn={onAddBreadMenu} />
+          <Button type={'lightOrange'} text={'추가하기'} btnSize={'small'} onClickBtn={onAddMenu} />
         </BtnWrapper>
       </RowContents>
     </Row>

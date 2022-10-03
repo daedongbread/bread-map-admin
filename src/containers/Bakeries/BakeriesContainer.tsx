@@ -1,14 +1,14 @@
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Column } from 'react-table';
-import { BakeriesItemEntity, BakeriesItemStatus, useGetBakeries } from '@/apis';
+import { BakeriesItemEntity, useGetBakeries } from '@/apis';
 import { BakeriesTable } from '@/components/Bakeries';
 import { Button, TableData, SearchBar, Pagination, CompleteStatus as Status } from '@/components/Shared';
 import type { CompleteStatusProps as StatusProps } from '@/components/Shared';
 
 import Routes from '@/constants/routes';
 import usePagination from '@/hooks/usePagination';
-import { bakeryUtils } from '@/utils';
+
 import styled from '@emotion/styled';
 
 type BakeriesTableData = TableData<Omit<BakeriesItemEntity, 'status'> & { status: StatusProps; notification: string }>;
@@ -60,8 +60,6 @@ export const BakeriesContainer = () => {
   );
 };
 
-/** constants */
-
 const columns: (Column & { percentage: number })[] = [
   { accessor: 'bakeryId', Header: 'Bakery_ID', percentage: 10 },
   { accessor: 'name', Header: '빵집이름', percentage: 25 },
@@ -78,8 +76,6 @@ const columns: (Column & { percentage: number })[] = [
 
 const TOTAL_COUNT = 500;
 const PER_COUNT = 15;
-
-/** style */
 
 const Container = styled.div`
   padding: 3rem 6rem;

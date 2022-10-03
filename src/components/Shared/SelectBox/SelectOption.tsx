@@ -12,6 +12,11 @@ type SelectOptionProps = {
   onSelectOption: (option: SelectOption | null) => void;
 };
 
+// type BasicSelectOptionProps = {
+//   option: SelectOption;
+//   onSelectOption: (payload: { optionValue: string }) => void;
+// };
+
 export const BasicSelectOption = ({ option, onSelectOption }: SelectOptionProps) => {
   return (
     <Option onClick={() => onSelectOption(option)}>

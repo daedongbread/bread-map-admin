@@ -17,59 +17,75 @@ export type Link = {
 type Props = {
   label: string;
   links: Link[];
-  updateLinks: (links: Link[]) => void;
+  openedLinkIdx: number | null;
+  onToggleLinkOption: (currIdx: number) => void;
+  onSelectLinkOption: (payload: { currIdx: number; optionValue: string; linkValue: string }) => void;
+  onChangeLinkValue: (payload: { currIdx: number; optionValue: string; linkValue: string }) => void;
+  onSetLinks: (links: Link[]) => void;
+  onRemoveLink: (currIdx: number) => void;
+  onAddLink: () => void;
 };
 
-export const LinkForm = ({ label, links, updateLinks }: Props) => {
-  const [openedLinkIdx, setOpenedLinkIdx] = React.useState<number | null>(null);
+export const LinkForm = ({
+  label,
+  links,
+  openedLinkIdx,
+  onToggleLinkOption,
+  onSelectLinkOption,
+  onChangeLinkValue,
+  onSetLinks,
+  onRemoveLink,
+  onAddLink,
+}: Props) => {
+  // const [openedLinkIdx, setOpenedLinkIdx] = React.useState<number | null>(null);
 
-  const onToggleLinkOption = (currIdx: number) => {
-    if (currIdx === openedLinkIdx) setOpenedLinkIdx(null);
-    else setOpenedLinkIdx(currIdx);
-  };
+  // const onToggleLinkOption = (currIdx: number) => {
+  //   if (currIdx === openedLinkIdx) setOpenedLinkIdx(null);
+  //   else setOpenedLinkIdx(currIdx);
+  // };
 
-  const onSelectLinkOption = (currIdx: number, option: SelectOption | null) => {
-    // 이미 존재하는 유형을 선택할 경우 막아주기
-    const updatedLinks = links.map((link, idx) => {
-      if (currIdx === idx) {
-        if (option) {
-          return {
-            ...link,
-            key: option.value,
-          };
-        } else {
-          return {
-            key: '',
-            value: '',
-          };
-        }
-      } else return link;
-    });
-    updateLinks(updatedLinks);
-  };
+  // const onSelectLinkOption = (currIdx: number, option: SelectOption | null) => {
+  //   // 이미 존재하는 유형을 선택할 경우 막아주기
+  //   const updatedLinks = links.map((link, idx) => {
+  //     if (currIdx === idx) {
+  //       if (option) {
+  //         return {
+  //           ...link,
+  //           key: option.value,
+  //         };
+  //       } else {
+  //         return {
+  //           key: '',
+  //           value: '',
+  //         };
+  //       }
+  //     } else return link;
+  //   });
+  //   updateLinks(updatedLinks);
+  // };
 
-  const onChangeLinkUrl = (currIdx: number, url: string) => {
-    const updatedLinks = links.map((link, idx) => {
-      if (currIdx === idx) {
-        return {
-          ...link,
-          value: url,
-        };
-      } else {
-        return link;
-      }
-    });
-    updateLinks(updatedLinks);
-  };
+  // const onChangeLinkUrl = (currIdx: number, url: string) => {
+  //   const updatedLinks = links.map((link, idx) => {
+  //     if (currIdx === idx) {
+  //       return {
+  //         ...link,
+  //         value: url,
+  //       };
+  //     } else {
+  //       return link;
+  //     }
+  //   });
+  //   updateLinks(updatedLinks);
+  // };
 
-  const onRemoveLink = (currIdx: number) => {
-    const updatedLinks = links.filter((link, idx) => currIdx !== idx);
-    updateLinks(updatedLinks);
-  };
+  // const onRemoveLink = (currIdx: number) => {
+  //   const updatedLinks = links.filter((link, idx) => currIdx !== idx);
+  //   updateLinks(updatedLinks);
+  // };
 
-  const onAddLink = () => {
-    updateLinks([...links, { key: '', value: '' }]);
-  };
+  // const onAddLink = () => {
+  //   updateLinks([...links, { key: '', value: '' }]);
+  // };
 
   return (
     <Row>
@@ -86,7 +102,7 @@ export const LinkForm = ({ label, links, updateLinks }: Props) => {
                   options={options}
                   onToggleLinkOption={onToggleLinkOption}
                   onSelectLinkOption={onSelectLinkOption}
-                  onChangeLinkUrl={onChangeLinkUrl}
+                  onChangeLinkValue={onChangeLinkValue}
                   onRemoveLink={onRemoveLink}
                 />
               </CustomRow>
@@ -103,27 +119,12 @@ export const LinkForm = ({ label, links, updateLinks }: Props) => {
   );
 };
 
-/** constants */
-
 const options: Option[] = [
   { name: '웹사이트', value: 'websiteURL' },
   { name: '인스타그램', value: 'instagramURL' },
   { name: '페이스북', value: 'facebookURL' },
   { name: '기타', value: 'blogURL' },
 ];
-
-// const initialLink: Link[] = [
-//   {
-//     key: 'websiteURL',
-//     value: '',
-//   },
-//   {
-//     key: 'instagramURL',
-//     value: '',
-//   },
-// ];
-
-/** style */
 
 const CustomRowContents = styled(RowContents)`
   input {

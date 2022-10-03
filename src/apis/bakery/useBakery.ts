@@ -1,7 +1,5 @@
 import { useMutation, useQuery } from 'react-query';
-import { BakeriesItemEntity, BakeryDetailEntity } from '@/apis/bakery/types';
-import { TableData } from '@/components/Shared';
-import type { CompleteStatusProps as StatusProps } from '@/components/Shared';
+import { BakeryDetailEntity } from '@/apis/bakery/types';
 import { bakeryUtils } from '@/utils';
 import { fetcher } from '../axios/fetcher';
 

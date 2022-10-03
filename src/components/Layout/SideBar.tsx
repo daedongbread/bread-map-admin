@@ -23,22 +23,42 @@ export const SideBar = () => {
         <h1>대동빵지도</h1>
       </Header>
       <ul>
-        <MenuLink to={Routes.BAKERY_REQUEST}>
-          <MenuItem icon={<Pencil />} name={'제보관리'} noti={43} active={isCurrent(Routes.BAKERY_REQUEST)} />
-        </MenuLink>
-        <MenuLink to={Routes.BAKERIES}>
-          <MenuItem icon={<Server />} name={'빵집관리'} noti={143} active={isCurrent(Routes.BAKERIES)} />
-        </MenuLink>
-        <MenuLink to={Routes.USER_REPORT}>
-          <MenuItem icon={<Frown />} name={'신고목록'} active={isCurrent(Routes.USER_REPORT)} />
-        </MenuLink>
-        <MenuLink to={Routes.USERS}>
-          <MenuItem icon={<Users />} name={'사용자관리'} active={isCurrent(Routes.USERS)} />
-        </MenuLink>
+        {SidebarMenu.map(menu => (
+          <MenuLink to={menu.path}>
+            <MenuItem icon={menu.icon} name={menu.name} noti={menu.noti} active={isCurrent(menu.path)} />
+          </MenuLink>
+        ))}
       </ul>
     </Container>
   );
 };
+
+const SidebarMenu = [
+  {
+    name: '제보관리',
+    path: Routes.BAKERY_REQUEST,
+    icon: <Pencil />,
+    noti: 43,
+  },
+  {
+    name: '빵집관리',
+    path: Routes.BAKERIES,
+    icon: <Server />,
+    noti: 141,
+  },
+  {
+    name: '신고목록',
+    path: Routes.USER_REPORT,
+    icon: <Frown />,
+    noti: 0,
+  },
+  {
+    name: '사용자관리',
+    path: Routes.USERS,
+    icon: <Users />,
+    noti: 0,
+  },
+];
 
 const Container = styled.div`
   width: ${({ theme }) => theme.size.sidebarWidth};

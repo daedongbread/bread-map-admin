@@ -33,14 +33,10 @@ export const LoginContainer = () => {
   );
 };
 
-/** constants  */
-
 const initialForm = {
   email: '',
   password: '',
 };
-
-/** style */
 
 const Container = styled.div`
   height: 100vh;

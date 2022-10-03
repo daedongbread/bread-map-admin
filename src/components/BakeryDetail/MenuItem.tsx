@@ -10,33 +10,34 @@ import styled from '@emotion/styled';
 type Props = {
   idx: number;
   menu: Omit<BakeryMenuEntity, 'image'> & { image: File | string | null };
-  onChangeBreadMenuInput: (currIdx: number, currInput: 'name' | 'price' | 'image', value: string) => void;
-  onRemoveBreadMenu: (currIdx: number) => void;
-  onChangeBreadImg: (currIdx: number, e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangeMenuInput: (payload: { currIdx: number; name: string; value: string }) => void;
+  onRemoveMenu: (currIdx: number) => void;
+  onChangeMenuImg: ({ currIdx, e }: { currIdx: number; e: React.ChangeEvent<HTMLInputElement> }) => void;
 };
 
-const MenuItem = ({ idx, menu, onChangeBreadMenuInput, onRemoveBreadMenu, onChangeBreadImg }: Props) => {
+const MenuItem = ({ idx, menu, onChangeMenuInput, onRemoveMenu, onChangeMenuImg }: Props) => {
   const { inputRef, onClickTriggerFile, getSrc } = useFileInput();
-
-  const onChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChangeBreadImg(idx, e);
-  };
 
   return (
     <Container>
       <LeftContainer>
         <CustomRow>
           <label>메뉴명</label>
-          <Input name={'name'} value={menu.name} type={'plain'} onChangeInput={e => onChangeBreadMenuInput(idx, 'name', e.target.value)} />
+          <Input name={'name'} value={menu.name} type={'plain'} onChangeInput={e => onChangeMenuInput({ currIdx: idx, name: 'name', value: e.target.value })} />
         </CustomRow>
         <CustomRow>
           <label>가격</label>
-          <Input name={'price'} value={menu.price.toLocaleString()} type={'plain'} onChangeInput={e => onChangeBreadMenuInput(idx, 'price', e.target.value)} />
+          <Input
+            name={'price'}
+            value={menu.price.toLocaleString()}
+            type={'plain'}
+            onChangeInput={e => onChangeMenuInput({ currIdx: idx, name: 'price', value: e.target.value })}
+          />
         </CustomRow>
         <BtnWrapper>
-          <Button text={'메뉴 삭제'} type={'gray'} btnSize={'small'} onClickBtn={() => onRemoveBreadMenu(idx)} />
+          <Button text={'메뉴 삭제'} type={'gray'} btnSize={'small'} onClickBtn={() => onRemoveMenu(idx)} />
           <Button text={'이미지 변경'} type={'lightOrange'} btnSize={'small'} onClickBtn={onClickTriggerFile} />
-          <input ref={inputRef} type="file" accept="image/png, image/jpeg" onChange={onChangeFile} />
+          <input ref={inputRef} type="file" accept="image/png, image/jpeg" onChange={e => onChangeMenuImg({ currIdx: idx, e })} />
         </BtnWrapper>
       </LeftContainer>
       <div>

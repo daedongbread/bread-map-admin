@@ -5,7 +5,7 @@ type MenuItemProps = {
   icon: ReactNode;
   name: string;
   active: boolean;
-  noti?: number;
+  noti: number;
 };
 
 export const MenuItem = ({ icon, name, active, noti }: MenuItemProps) => {
@@ -14,7 +14,7 @@ export const MenuItem = ({ icon, name, active, noti }: MenuItemProps) => {
       <div>
         {icon}
         <span>{name}</span>
-        {noti && <Notification>{noti}</Notification>}
+        {noti > 0 && <Notification>{noti}</Notification>}
       </div>
     </ItemContainer>
   );
