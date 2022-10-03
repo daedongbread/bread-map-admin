@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, SelectOption } from '@/components/Shared';
+import { Button } from '@/components/Shared';
 import { Row, RowContents } from '@/styles';
 import styled from '@emotion/styled';
 import LinkItem from './LinkItem';
@@ -37,56 +37,6 @@ export const LinkForm = ({
   onRemoveLink,
   onAddLink,
 }: Props) => {
-  // const [openedLinkIdx, setOpenedLinkIdx] = React.useState<number | null>(null);
-
-  // const onToggleLinkOption = (currIdx: number) => {
-  //   if (currIdx === openedLinkIdx) setOpenedLinkIdx(null);
-  //   else setOpenedLinkIdx(currIdx);
-  // };
-
-  // const onSelectLinkOption = (currIdx: number, option: SelectOption | null) => {
-  //   // 이미 존재하는 유형을 선택할 경우 막아주기
-  //   const updatedLinks = links.map((link, idx) => {
-  //     if (currIdx === idx) {
-  //       if (option) {
-  //         return {
-  //           ...link,
-  //           key: option.value,
-  //         };
-  //       } else {
-  //         return {
-  //           key: '',
-  //           value: '',
-  //         };
-  //       }
-  //     } else return link;
-  //   });
-  //   updateLinks(updatedLinks);
-  // };
-
-  // const onChangeLinkUrl = (currIdx: number, url: string) => {
-  //   const updatedLinks = links.map((link, idx) => {
-  //     if (currIdx === idx) {
-  //       return {
-  //         ...link,
-  //         value: url,
-  //       };
-  //     } else {
-  //       return link;
-  //     }
-  //   });
-  //   updateLinks(updatedLinks);
-  // };
-
-  // const onRemoveLink = (currIdx: number) => {
-  //   const updatedLinks = links.filter((link, idx) => currIdx !== idx);
-  //   updateLinks(updatedLinks);
-  // };
-
-  // const onAddLink = () => {
-  //   updateLinks([...links, { key: '', value: '' }]);
-  // };
-
   return (
     <Row>
       <Row alignTop>
