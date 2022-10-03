@@ -2,7 +2,6 @@ import React from 'react';
 
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/Shared/Button';
-import Routes from '@/constants/routes';
 import { BakeryForm } from '@/containers/BakeryDetail';
 
 import styled from '@emotion/styled';
@@ -94,16 +93,9 @@ export const Form = ({ form, bakeryImg, onChangeForm, onChangeBakeryImg, onSaveF
     onChangeForm('menu', breadMenus);
   };
 
-  const onClickBack = () => {
-    navigate(Routes.BAKERIES);
-  };
-
   return (
-    <Container>
-      <div>
-        <Button type={'gray'} text={'목록 돌아가기'} btnSize={'small'} onClickBtn={onClickBack} />
-      </div>
-      <form>
+    <>
+      <Forms>
         <div>
           <BasicForm label={'삥집명'} form={form} onChangeForm={onChangeForm} name={'name'} />
           <BakeryImgForm label={'대표이미지'} previewImg={bakeryImg} onChangeBakeryImg={onChangeBakeryImg} />
@@ -120,36 +112,34 @@ export const Form = ({ form, bakeryImg, onChangeForm, onChangeBakeryImg, onSaveF
             onChangeBreadImg={onChangeBreadImg}
           />
         </div>
-      </form>
-      <BtnWrapper>
+      </Forms>
+      <SaveBtns>
         <Button type={'reverseOrange'} text={'임시저장'} fontSize={'medium'} btnSize={'medium'} />
         <Button type={'orange'} text={'저장하기'} fontSize={'medium'} btnSize={'medium'} onClickBtn={onClickSave} />
-      </BtnWrapper>
-    </Container>
+      </SaveBtns>
+    </>
   );
 };
 
 /** style */
 
-const Container = styled.div`
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  > div {
-    padding: 2rem 6rem;
-  }
-  form {
-    flex: 1;
-    border-top: ${({ theme }) => `1px solid ${theme.color.gray200}`};
-    border-bottom: ${({ theme }) => `1px solid ${theme.color.gray200}`};
-    padding: 2rem 6rem;
-  }
+const Forms = styled.form`
+  flex: 1;
+  border-top: ${({ theme }) => `1px solid ${theme.color.gray200}`};
+  padding: 2rem 6rem;
+  margin-bottom: 10rem;
 `;
 
-const BtnWrapper = styled.div`
+const SaveBtns = styled.div`
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  bottom: 0;
+  border-top: ${({ theme }) => `1px solid ${theme.color.gray200}`};
+  width: ${({ theme }) => `calc(100% - ${theme.size.sidebarWidth})`};
+  background-color: ${({ theme }) => theme.color.white};
+  z-index: 2;
   > button {
     width: 18rem;
   }
-  display: flex;
-  justify-content: space-between;
 `;

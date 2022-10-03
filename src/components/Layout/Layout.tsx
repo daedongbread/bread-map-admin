@@ -19,7 +19,7 @@ export const Layout = () => {
 const Container = styled.div`
   display: flex;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
 
   > aside {
     border-right: ${({ theme }) => `1px solid ${theme.color.gray200}`};

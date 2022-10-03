@@ -1,9 +1,13 @@
-export const size = {
+export const mqSize = {
   largest: '75em', // 1200px
   large: '56.25em', // 900px
   medium: '37.5em', // 600px
   small: '31.25em', // 500px
   smallest: '25em', // 400px
+};
+
+export const size = {
+  sidebarWidth: '27rem',
 };
 
 export const color = {
@@ -30,9 +34,10 @@ export const color = {
 
 export const theme = {
   color,
+  size,
   mq: {
-    laptop: `@media only screen and (min-width: ${size.largest})`,
-    tablet: `@media only screen and (min-width: ${size.large})`,
-    mobile: `@media only screen and (min-width: ${size.small})`,
+    laptop: `@media only screen and (min-width: ${mqSize.largest})`,
+    tablet: `@media only screen and (min-width: ${mqSize.large})`,
+    mobile: `@media only screen and (min-width: ${mqSize.small})`,
   },
 };

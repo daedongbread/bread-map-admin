@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, Input } from '@/components/Shared';
-import { GraySelectBox, SelectOption } from '@/components/Shared/SelectBox';
+import { Button, Input, SelectBox, BasicSelectTrigger, BasicSelectOption } from '@/components/Shared';
+import type { SelectOption } from '@/components/Shared';
 import useSelectBox from '@/hooks/useSelectBox';
 import { Link, Option } from './LinkForm';
 
@@ -46,7 +46,11 @@ const LinkItem = ({ idx, link, opened, options, onToggleLinkOption, onSelectLink
 
   return (
     <>
-      <GraySelectBox isOpen={opened} selectedOption={selectedOption} onToggleSelectBox={onToggle} onSelectOption={onSelectLink} options={options} width={130} />
+      <SelectBox width={130} isOpen={opened} onToggleSelectBox={onToggle} triggerComponent={<BasicSelectTrigger selectedOption={selectedOption} />}>
+        {options.map((option, idx) => (
+          <BasicSelectOption key={idx} option={option} onSelectOption={onSelectLink} />
+        ))}
+      </SelectBox>
       <Input type={'plain'} onChangeInput={onChangeInput} value={link.value} />
       <Button type={'gray'} text={'삭제'} btnSize={'small'} onClickBtn={onRemove} />
     </>

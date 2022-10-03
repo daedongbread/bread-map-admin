@@ -1,11 +1,15 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import type { BakeryDetailEntity, BakeryMenuEntity, BakeryStatus } from '@/apis';
 import { useCreateBakery, useGetBakery, useUpdateBakery } from '@/apis/bakery/useBakery';
 import { Form } from '@/components/BakeryDetail';
+import { Button, SelectBox, StatusSelectTrigger, StatusSelectOption } from '@/components/Shared';
+import Routes from '@/constants/routes';
 import useForm from '@/hooks/useForm';
 
+import useSelectBox from '@/hooks/useSelectBox';
+import { color } from '@/styles';
 import styled from '@emotion/styled';
 
 export type BakeryForm = Omit<BakeryDetailEntity, 'image' | 'status' | 'menu'> & {
@@ -15,8 +19,15 @@ export type BakeryForm = Omit<BakeryDetailEntity, 'image' | 'status' | 'menu'> &
   })[];
 };
 
+const options = [
+  { name: '미게시', value: 'UNPOSTING', color: color.red },
+  { name: '게시중', value: 'POSTING', color: color.green },
+];
+
 export const BakeryDetailContainer = () => {
   const { bakeryId } = useParams();
+  const navigate = useNavigate();
+  const { isOpen, selectedOption, onToggleSelectBox, onSelectOption } = useSelectBox(options[0]);
 
   const { form, onChangeForm, onSetForm } = useForm<BakeryForm>(initialBakeryForm);
   const [bakeryImg, setBakeryImg] = React.useState<File | null>(null); // hook으로 뺄지 고민
@@ -49,8 +60,24 @@ export const BakeryDetailContainer = () => {
     }
   };
 
+  const onClickBack = () => {
+    navigate(Routes.BAKERIES);
+  };
+
+  React.useEffect(() => {
+    console.log('isOpen', isOpen);
+  }, [isOpen]);
+
   return (
     <Container>
+      <div>
+        <Button type={'gray'} text={'목록 돌아가기'} btnSize={'small'} onClickBtn={onClickBack} />
+        <SelectBox width={120} isOpen={isOpen} onToggleSelectBox={onToggleSelectBox} triggerComponent={<StatusSelectTrigger selectedOption={selectedOption} />}>
+          {options.map((option, idx) => (
+            <StatusSelectOption key={idx} active={option.name === selectedOption?.name} option={option} onSelectOption={onSelectOption} />
+          ))}
+        </SelectBox>
+      </div>
       <Form
         form={form}
         bakeryImg={bakeryImg}
@@ -95,4 +122,15 @@ const initialBakeryForm = {
 
 /** style */
 
-const Container = styled.div``;
+const Container = styled.div`
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  > div {
+    padding: 2rem 6rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+`;

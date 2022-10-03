@@ -41,11 +41,12 @@ export const SideBar = () => {
 };
 
 const Container = styled.div`
-  width: 27rem;
+  width: ${({ theme }) => theme.size.sidebarWidth};
 `;
 
 const Header = styled.div`
   padding: 3rem 2.4rem;
+
   h1 {
     font-size: 2rem;
     font-weight: bold;
