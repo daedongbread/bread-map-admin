@@ -36,7 +36,7 @@ const LinkItem = ({ idx, link, opened, options, onToggleLinkOption, onSelectLink
   };
 
   React.useEffect(() => {
-    const option = options.find(option => option.value === link.value);
+    const option = options.find(option => option.value === link.key);
     if (!option) {
       onSelectOption(null);
     } else {
@@ -47,7 +47,7 @@ const LinkItem = ({ idx, link, opened, options, onToggleLinkOption, onSelectLink
   return (
     <>
       <GraySelectBox isOpen={opened} selectedOption={selectedOption} onToggleSelectBox={onToggle} onSelectOption={onSelectLink} options={options} width={130} />
-      <Input type={'plain'} onChangeInput={onChangeInput} value={link.url} />
+      <Input type={'plain'} onChangeInput={onChangeInput} value={link.value} />
       <Button type={'gray'} text={'삭제'} btnSize={'small'} onClickBtn={onRemove} />
     </>
   );

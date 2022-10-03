@@ -3,7 +3,7 @@ import { Cell, HeaderGroup, Row, useTable } from 'react-table';
 import styled from '@emotion/styled';
 import { TableProps } from './types';
 
-export const Table = ({ columns, data }: TableProps) => {
+export const Table = ({ columns, data, rowClickFn }: TableProps) => {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data });
 
   if (columns.reduce((prev, curr) => prev + curr.percentage, 0) !== 100) {
@@ -27,7 +27,7 @@ export const Table = ({ columns, data }: TableProps) => {
         {rows.map((row: Row) => {
           prepareRow(row);
           return (
-            <tr {...row.getRowProps()}>
+            <tr {...row.getRowProps()} onClick={rowClickFn}>
               {row.cells.map((cell: Cell, idx: number) => {
                 return (
                   <Td percentage={columns[idx].percentage} {...cell.getCellProps()}>
@@ -67,6 +67,15 @@ const TableWrapper = styled.table`
     justify-content: center;
     align-items: center;
     font-size: 1.4rem;
+  }
+
+  tbody {
+    tr {
+      cursor: pointer;
+      &:hover {
+        background-color: ${({ theme }) => theme.color.gray100};
+      }
+    }
   }
 `;
 

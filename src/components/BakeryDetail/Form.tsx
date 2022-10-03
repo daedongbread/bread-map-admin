@@ -1,6 +1,10 @@
 import React from 'react';
+
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/Shared/Button';
+import Routes from '@/constants/routes';
 import { BakeryForm } from '@/containers/BakeryDetail';
+
 import styled from '@emotion/styled';
 
 import { AddressForm } from './AddressForm';
@@ -14,85 +18,90 @@ type Props = {
   bakeryImg: File | null;
   onChangeForm: (key: string, value: any) => void;
   onChangeBakeryImg: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSaveForm: (payload: FormData) => void;
 };
 
-export const Form = ({ form, bakeryImg, onChangeForm, onChangeBakeryImg }: Props) => {
-  // const [bakeryImage, setBakeryImage] = useState<File | null>(null);
+export const Form = ({ form, bakeryImg, onChangeForm, onChangeBakeryImg, onSaveForm }: Props) => {
+  const navigate = useNavigate();
+  const [links, setLinks] = React.useState<{ key: string; value: string }[]>([]);
 
-  const onSubmitForm = () => {
-    // 이미지가 없는 빵의경우 0:null 형태로 잡아줘야함.
+  React.useEffect(() => {
+    // 나중엔 최상위에서 객체 만들어서 내려주기만 하기
+    const links: { key: string; value: string }[] = [];
+    for (const [key, value] of Object.entries(form)) {
+      if (key.includes('URL')) {
+        links.push({ key, value: value as string });
+      }
+    }
+    console.log('links', links);
+    setLinks(links);
+  }, []);
 
+  const updateLinks = (links: { key: string; value: string }[]) => {
+    setLinks(links);
+  };
+
+  const onClickSave = () => {
     const formData = new FormData();
-    formData.append('request', JSON.stringify(form));
-    formData.append('bakeryImage', bakeryImg || '');
-    if (form.breadList.length) {
-      form.breadList.forEach(bread => {
-        formData.append('breadImageList', bread.image || ''); // 이미지가 없을때 null을 보낼수가 없다. 얘기하기!
+
+    // link에 대한 순회
+    const linkPayload: { [key: string]: string } = {};
+    links.forEach(link => {
+      linkPayload[link.key] = link.value;
+    });
+    formData.append('request', JSON.stringify({ ...form, ...linkPayload }));
+
+    // 빵 메뉴 이미지 순회
+    if (form.menu.length) {
+      form.menu.forEach(bread => {
+        formData.append('breadImageList', bread.image || '');
       });
     }
 
+    // 빵집 이미지 추가
+    formData.append('bakeryImage', bakeryImg || '');
+
     const payload = formData;
     // axios.post('/aaa', payload)~
+
+    onSaveForm(payload);
   };
 
-  // 메뉴 최초 추가시, null로 초기화
-  // const addNewBreadImg = (currIdx: number) => {
-  //   //const lastIdx = object.keys()
-  //   setBreadImageList(prev => ({ ...prev, [currIdx]: null }));
-  //   // 만약에 빵이미지가 {1,2,3,4,5} 있다가
-  //   // 중간을 삭제해서 {1,2,4,5}면,
-  //   // 그다음에 추가하면 idx가 어떻게되는거야..? 여기서부터 문제가있는데? No.. 그냥 최종인덱스를 확인해서 추가하자.
-  // };
-
-  // 메뉴 삭제시, 이미지 정보 오브젝트에서 제거
-  // const removeBreadImg = (currIdx: number) => {
-  //   if (!breadImageList) return;
-  //   const updated: { [key: number]: File | null } = {};
-  //   Object.keys(breadImageList).forEach(key => {
-  //     const numKey = Number(key);
-  //     if (numKey !== currIdx) {
-  //       updated[numKey] = breadImageList[numKey];
-  //     }
-  //   });
-  //   // const updatedBreadImg = Object.keys(breadImageList).filter(key => Number(key) !== currIdx);
-  //   setBreadImageList({ ...updated });
-  // };
-
-  // const onChangeBakeryImg = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setBakeryImage(e.target.files && e.target.files[0]);
-  // };
-
   const onChangeBreadMenuInput = (currIdx: number, currInput: 'name' | 'price' | 'image', value: string) => {
-    const updatedBreadList = form.breadList.map((menu, idx) => {
+    const breadMenus = form.menu.map((menu, idx) => {
       if (idx === currIdx) return { ...menu, [currInput]: value };
       else return menu;
     });
-    onChangeForm('breadList', updatedBreadList);
+    onChangeForm('menu', breadMenus);
   };
 
   const onRemoveBreadMenu = (currIdx: number) => {
-    const updatedBreadList = form.breadList.filter((menu, idx) => idx !== currIdx);
-    onChangeForm('breadList', updatedBreadList);
+    const breadMenus = form.menu.filter((menu, idx) => idx !== currIdx);
+    onChangeForm('menu', breadMenus);
   };
 
   const onAddBreadMenu = () => {
-    const updatedBreadList = [...form.breadList, { breadId: 134, name: '', price: '', image: null }];
-    onChangeForm('breadList', updatedBreadList);
+    const breadMenus = [...form.menu, { breadId: 134, name: '', price: '', image: null }];
+    onChangeForm('menu', breadMenus);
   };
 
   const onChangeBreadImg = (currIdx: number, e: React.ChangeEvent<HTMLInputElement>) => {
-    const updatedBreadList = form.breadList.map((menu, idx) => {
+    const breadMenus = form.menu.map((menu, idx) => {
       if (idx === currIdx) {
         return { ...menu, image: e.target.files?.[0] };
       } else return menu;
     });
-    onChangeForm('breadList', updatedBreadList);
+    onChangeForm('menu', breadMenus);
+  };
+
+  const onClickBack = () => {
+    navigate(Routes.BAKERIES);
   };
 
   return (
     <Container>
       <div>
-        <Button type={'gray'} text={'목록 돌아가기'} btnSize={'small'} />
+        <Button type={'gray'} text={'목록 돌아가기'} btnSize={'small'} onClickBtn={onClickBack} />
       </div>
       <form>
         <div>
@@ -100,7 +109,7 @@ export const Form = ({ form, bakeryImg, onChangeForm, onChangeBakeryImg }: Props
           <BakeryImgForm label={'대표이미지'} previewImg={bakeryImg} onChangeBakeryImg={onChangeBakeryImg} />
           <AddressForm label={'주소'} form={form} onChangeForm={onChangeForm} />
           <BasicForm label={'시간'} form={form} onChangeForm={onChangeForm} name={'hours'} placeholder={'엔터키를 치면 줄바꿈이 적용됩니다.'} />
-          <LinkForm label={'홈페이지'} form={form} onChangeForm={onChangeForm} />
+          <LinkForm label={'홈페이지'} links={links} updateLinks={updateLinks} />
           <BasicForm label={'전화번호'} form={form} onChangeForm={onChangeForm} name={'phoneNumber'} placeholder={'000-000-0000'} />
           <MenuForm
             label={'메뉴'}
@@ -114,11 +123,13 @@ export const Form = ({ form, bakeryImg, onChangeForm, onChangeBakeryImg }: Props
       </form>
       <BtnWrapper>
         <Button type={'reverseOrange'} text={'임시저장'} fontSize={'medium'} btnSize={'medium'} />
-        <Button type={'orange'} text={'저장하기'} fontSize={'medium'} btnSize={'medium'} />
+        <Button type={'orange'} text={'저장하기'} fontSize={'medium'} btnSize={'medium'} onClickBtn={onClickSave} />
       </BtnWrapper>
     </Container>
   );
 };
+
+/** style */
 
 const Container = styled.div`
   min-height: 100vh;

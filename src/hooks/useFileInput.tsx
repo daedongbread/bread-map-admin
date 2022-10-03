@@ -8,9 +8,20 @@ const useFileInput = () => {
     inputRef.current.click();
   };
 
-  const getSrc = (file: File | null) => {
+  const getSrc = (file: File | string | null) => {
+    // 서버에서 내려주는 img가 어떤형태인가?
     if (!file) return null;
-    return URL.createObjectURL(file);
+
+    if (typeof file === 'string') {
+      if (file.includes('http')) {
+        // storage imag ?
+        return file;
+      } else {
+        return '';
+      }
+    } else {
+      return URL.createObjectURL(file);
+    }
   };
 
   return { inputRef, onClickTriggerFile, getSrc };

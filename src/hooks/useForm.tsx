@@ -4,15 +4,14 @@ function useForm<T>(initialForm: T) {
   const [form, setForm] = React.useState(initialForm);
 
   const onChangeForm = (key: string, value: any) => {
-    console.log('change', key);
     setForm({ ...form, [key]: value });
   };
 
-  React.useEffect(() => {
-    console.log('form', form);
-  }, [form]);
+  const onSetForm = (form: T) => {
+    setForm(form);
+  };
 
-  return { form, onChangeForm };
+  return { form, onChangeForm, onSetForm };
 }
 
 export default useForm;

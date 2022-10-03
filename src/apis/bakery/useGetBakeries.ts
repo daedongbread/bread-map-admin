@@ -20,7 +20,7 @@ const requestGetBakeries = async ({ page }: GetBakeriesPayload) => {
 
 const useGetBakeries = ({ page }: GetBakeriesPayload) => {
   // ** server 동작시 주석 제거
-  // const queryKey = ['useGetBakeries', { page }] as const;
+  // const queryKey = ['bakeries', { page }] as const;
   // const { data, isLoading, isError, refetch } = useQuery(queryKey, () => requestGetBakeries({ page }));
   // enabled 필요한가?
   const MOCK_DATA: TableData<Omit<BakeriesItemEntity, 'status'> & { status: StatusProps; notification: string }> = [
@@ -30,7 +30,7 @@ const useGetBakeries = ({ page }: GetBakeriesPayload) => {
       notification: '',
       createdAt: '2021-03-02',
       modifiedAt: '2021-04-06',
-      status: bakeryUtils.formatUseColumn('POSTING'),
+      status: bakeryUtils.formatStatusColumn('POSTING'),
     },
     {
       bakeryId: 2,
@@ -38,7 +38,7 @@ const useGetBakeries = ({ page }: GetBakeriesPayload) => {
       notification: '',
       createdAt: '2021-04-07',
       modifiedAt: '2021-08-03',
-      status: bakeryUtils.formatUseColumn('UNPOSTING'),
+      status: bakeryUtils.formatStatusColumn('UNPOSTING'),
     },
   ];
   return {

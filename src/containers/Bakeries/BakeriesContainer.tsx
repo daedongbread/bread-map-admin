@@ -1,13 +1,66 @@
 import React, { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Column } from 'react-table';
 import { BakeriesItemEntity, BakeriesItemStatus, useGetBakeries } from '@/apis';
 import { BakeriesTable } from '@/components/Bakeries';
 import { Button, TableData, SearchBar, Pagination, CompleteStatus as Status } from '@/components/Shared';
 import type { CompleteStatusProps as StatusProps } from '@/components/Shared';
 
+import Routes from '@/constants/routes';
 import usePagination from '@/hooks/usePagination';
 import { bakeryUtils } from '@/utils';
 import styled from '@emotion/styled';
+
+type BakeriesTableData = TableData<Omit<BakeriesItemEntity, 'status'> & { status: StatusProps; notification: string }>;
+
+export const BakeriesContainer = () => {
+  const navigate = useNavigate();
+  const { currPage, leftPosition, onClickPage, onClickNext, onClickPrev, onClickEnd, onClickStart } = usePagination(TOTAL_COUNT, PER_COUNT);
+
+  const [bakeries, setBakeries] = React.useState<BakeriesTableData>([]);
+
+  React.useEffect(() => {
+    const { bakeries, loading } = useGetBakeries({ page: currPage });
+    // loading중일때 로딩화면 보여주기
+    console.log(currPage, 'bakeries', bakeries);
+    setBakeries(bakeries);
+  }, [currPage]);
+
+  const bakeryColumns = useMemo(() => columns, []);
+
+  const onClickTableRow = () => {
+    navigate(`${Routes.BAKERIES}/4`);
+  };
+
+  const onClickCreate = () => {
+    navigate(`${Routes.BAKERIES}/new`);
+  };
+
+  return (
+    <Container>
+      <TopContainer>
+        <SearchBarWrapper>
+          <SearchBar placeholder={'빵집 이름으로 검색하기'} />
+        </SearchBarWrapper>
+        <Button text={'신규등록'} type={'orange'} btnSize={'medium'} onClickBtn={onClickCreate} />
+      </TopContainer>
+      <BakeriesTable columns={bakeryColumns} data={bakeries} rowClickFn={onClickTableRow} />
+      <Pagination
+        totalCount={TOTAL_COUNT}
+        perCount={PER_COUNT}
+        currPage={currPage}
+        leftPosition={leftPosition}
+        onClickPage={onClickPage}
+        onClickNext={onClickNext}
+        onClickPrev={onClickPrev}
+        onClickEnd={onClickEnd}
+        onClickStart={onClickStart}
+      />
+    </Container>
+  );
+};
+
+/** constants */
 
 const columns: (Column & { percentage: number })[] = [
   { accessor: 'bakeryId', Header: 'Bakery_ID', percentage: 10 },
@@ -26,44 +79,7 @@ const columns: (Column & { percentage: number })[] = [
 const TOTAL_COUNT = 500;
 const PER_COUNT = 15;
 
-type BakeriesTableData = TableData<Omit<BakeriesItemEntity, 'status'> & { status: StatusProps; notification: string }>;
-
-export const BakeriesContainer = () => {
-  const [bakeries, setBakeries] = React.useState<BakeriesTableData>([]);
-  const { currPage, leftPosition, onClickPage, onClickNext, onClickPrev, onClickEnd, onClickStart } = usePagination(TOTAL_COUNT, PER_COUNT);
-
-  React.useEffect(() => {
-    const { bakeries, loading } = useGetBakeries({ page: currPage });
-    // loading중일때 로딩화면 보여주기
-    console.log(currPage, 'bakeries', bakeries);
-    setBakeries(bakeries);
-  }, [currPage]);
-
-  const bakeryColumns = useMemo(() => columns, []);
-
-  return (
-    <Container>
-      <TopContainer>
-        <SearchBarWrapper>
-          <SearchBar placeholder={'빵집 이름으로 검색하기'} />
-        </SearchBarWrapper>
-        <Button text={'신규등록'} type={'orange'} btnSize={'medium'} />
-      </TopContainer>
-      <BakeriesTable columns={bakeryColumns} data={bakeries} />
-      <Pagination
-        totalCount={TOTAL_COUNT}
-        perCount={PER_COUNT}
-        currPage={currPage}
-        leftPosition={leftPosition}
-        onClickPage={onClickPage}
-        onClickNext={onClickNext}
-        onClickPrev={onClickPrev}
-        onClickEnd={onClickEnd}
-        onClickStart={onClickStart}
-      />
-    </Container>
-  );
-};
+/** style */
 
 const Container = styled.div`
   padding: 3rem 6rem;

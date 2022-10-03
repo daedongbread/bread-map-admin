@@ -1,29 +1,25 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useRequestLogin } from '@/apis';
 import { Logo } from '@/components/Login';
 import { LoginForm } from '@/components/Login/LoginForm';
 import { Button } from '@/components/Shared';
 import Routes from '@/constants/routes';
 import useForm from '@/hooks/useForm';
-import useNavigation from '@/hooks/useNavigation';
 import styled from '@emotion/styled';
 
 export type LoginForm = typeof initialForm;
 
-const initialForm = {
-  email: '',
-  password: '',
-};
-
 export const LoginContainer = () => {
-  const { navigatePath } = useNavigation();
+  const navigate = useNavigate();
   const { form, onChangeForm } = useForm<LoginForm>(initialForm);
 
-  const { mutate } = useRequestLogin({ successFn: () => navigatePath(Routes.BAKERIES) });
+  const { mutate } = useRequestLogin({ successFn: () => navigate(Routes.BAKERIES) });
 
   const onSubmit = () => {
     const { email, password } = form;
     mutate({ email, password });
+    navigate(Routes.BAKERIES); // api 연동후 제거
   };
 
   return (
@@ -36,6 +32,15 @@ export const LoginContainer = () => {
     </Container>
   );
 };
+
+/** constants  */
+
+const initialForm = {
+  email: '',
+  password: '',
+};
+
+/** style */
 
 const Container = styled.div`
   height: 100vh;

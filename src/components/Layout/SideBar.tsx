@@ -1,16 +1,12 @@
-import { useEffect } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BarGraph, Frown, Pencil, Server, Users } from '@/components/Shared/Icons';
+import { Frown, Pencil, Server, Users } from '@/components/Shared/Icons';
 import Routes from '@/constants/routes';
 import styled from '@emotion/styled';
 import { MenuItem } from './MenuItem';
 
 export const SideBar = () => {
   const location = useLocation();
-
-  useEffect(() => {
-    console.log('-->', location.pathname);
-  }, [location]);
 
   const isCurrent = (path: Routes) => {
     const url = location.pathname;

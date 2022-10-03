@@ -19,11 +19,11 @@ export const MenuForm = ({ label, form, onChangeBreadMenuInput, onRemoveBreadMen
     <Row alignTop>
       <label>{label}</label>
       <RowContents>
-        {form.breadList.map((menu, idx) => (
+        {form.menu.map((item, idx) => (
           <MenuItem
             key={`menu-${idx}`}
             idx={idx}
-            menu={menu}
+            menu={item}
             onChangeBreadMenuInput={onChangeBreadMenuInput}
             onRemoveBreadMenu={onRemoveBreadMenu}
             onChangeBreadImg={onChangeBreadImg}

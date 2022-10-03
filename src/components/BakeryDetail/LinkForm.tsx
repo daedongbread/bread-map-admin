@@ -9,44 +9,19 @@ export type Option = {
   value: string;
 };
 
-const options: Option[] = [
-  { name: '웹사이트', value: 'websiteURL' },
-  { name: '인스타그램', value: 'instagramURL' },
-  { name: '페이스북', value: 'facebookURL' },
-  { name: '기타', value: 'blogURL' },
-];
+export type Link = {
+  key: string;
+  value: string;
+};
 
 type Props = {
   label: string;
-  form: { [key: string]: any };
-  onChangeForm: (key: string, value: any) => void;
+  links: Link[];
+  updateLinks: (links: Link[]) => void;
 };
 
-export type Link = {
-  value: string;
-  url: string;
-};
-
-const initialLink: Link[] = [
-  {
-    value: 'websiteURL',
-    url: '',
-  },
-  {
-    value: 'instagramURL',
-    url: '',
-  },
-];
-
-export const LinkForm = ({ label, form, onChangeForm }: Props) => {
-  const [links, setLinks] = React.useState<Link[]>(initialLink);
+export const LinkForm = ({ label, links, updateLinks }: Props) => {
   const [openedLinkIdx, setOpenedLinkIdx] = React.useState<number | null>(null);
-
-  React.useEffect(() => {
-    links.forEach(link => {
-      onChangeForm(link.value, link.url);
-    });
-  }, [links]);
 
   const onToggleLinkOption = (currIdx: number) => {
     if (currIdx === openedLinkIdx) setOpenedLinkIdx(null);
@@ -55,55 +30,45 @@ export const LinkForm = ({ label, form, onChangeForm }: Props) => {
 
   const onSelectLinkOption = (currIdx: number, option: SelectOption | null) => {
     // 이미 존재하는 유형을 선택할 경우 막아주기
-    const updatedLinks: Link[] = links.map((link, idx) => {
+    const updatedLinks = links.map((link, idx) => {
       if (currIdx === idx) {
         if (option) {
           return {
             ...link,
-            value: option.value,
+            key: option.value,
           };
         } else {
           return {
+            key: '',
             value: '',
-            url: '',
           };
         }
       } else return link;
     });
-
-    setLinks([...updatedLinks]);
+    updateLinks(updatedLinks);
   };
 
   const onChangeLinkUrl = (currIdx: number, url: string) => {
-    const updatedLinks: Link[] = links.map((link, idx) => {
+    const updatedLinks = links.map((link, idx) => {
       if (currIdx === idx) {
-        const option = options.find(option => option.value === link.value);
-        if (option) {
-          onChangeForm(option.value, url);
-        }
         return {
           ...link,
-          url,
+          value: url,
         };
-      } else return link;
+      } else {
+        return link;
+      }
     });
-
-    setLinks([...updatedLinks]);
+    updateLinks(updatedLinks);
   };
 
   const onRemoveLink = (currIdx: number) => {
-    const updatedLinks = links.filter((link, idx) => {
-      const option = links[currIdx];
-      if (option) {
-        onChangeForm(option.value, '');
-      }
-      return currIdx !== idx;
-    });
-    setLinks([...updatedLinks]);
+    const updatedLinks = links.filter((link, idx) => currIdx !== idx);
+    updateLinks(updatedLinks);
   };
 
   const onAddLink = () => {
-    setLinks(prev => [...prev, { value: '', url: '' }]);
+    updateLinks([...links, { key: '', value: '' }]);
   };
 
   return (
@@ -137,6 +102,28 @@ export const LinkForm = ({ label, form, onChangeForm }: Props) => {
     </Row>
   );
 };
+
+/** constants */
+
+const options: Option[] = [
+  { name: '웹사이트', value: 'websiteURL' },
+  { name: '인스타그램', value: 'instagramURL' },
+  { name: '페이스북', value: 'facebookURL' },
+  { name: '기타', value: 'blogURL' },
+];
+
+// const initialLink: Link[] = [
+//   {
+//     key: 'websiteURL',
+//     value: '',
+//   },
+//   {
+//     key: 'instagramURL',
+//     value: '',
+//   },
+// ];
+
+/** style */
 
 const CustomRowContents = styled(RowContents)`
   input {

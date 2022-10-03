@@ -50,13 +50,20 @@ const onErrorLogin = (error: unknown) => {
 };
 
 const useRequestLogin = ({ successFn }: { successFn: () => void }) => {
-  return useMutation(requestLogin, {
+  const { mutate, isLoading, isError } = useMutation(requestLogin, {
     onSuccess: () => {
       onSuccessLogin;
       successFn();
     },
     onError: onErrorLogin,
   });
+
+  return {
+    mutate,
+    loading: false, //isLoading,
+    error: false, // isError,
+    refetch: null,
+  };
 };
 
 export { useRequestLogin, requestRefresh };

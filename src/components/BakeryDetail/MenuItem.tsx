@@ -1,22 +1,24 @@
-import React, { ChangeEvent } from 'react';
+import React from 'react';
+
+import type { BakeryMenuEntity } from '@/apis';
 import { Button, Input, Preview } from '@/components/Shared';
-import { BreadMenu } from '@/containers/BakeryDetail';
 import useFileInput from '@/hooks/useFileInput';
+
 import { Row } from '@/styles';
 import styled from '@emotion/styled';
 
 type Props = {
   idx: number;
-  menu: BreadMenu;
+  menu: Omit<BakeryMenuEntity, 'image'> & { image: File | string | null };
   onChangeBreadMenuInput: (currIdx: number, currInput: 'name' | 'price' | 'image', value: string) => void;
   onRemoveBreadMenu: (currIdx: number) => void;
-  onChangeBreadImg: (currIdx: number, e: ChangeEvent<HTMLInputElement>) => void;
+  onChangeBreadImg: (currIdx: number, e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 const MenuItem = ({ idx, menu, onChangeBreadMenuInput, onRemoveBreadMenu, onChangeBreadImg }: Props) => {
   const { inputRef, onClickTriggerFile, getSrc } = useFileInput();
 
-  const onChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
+  const onChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChangeBreadImg(idx, e);
   };
 
@@ -29,7 +31,7 @@ const MenuItem = ({ idx, menu, onChangeBreadMenuInput, onRemoveBreadMenu, onChan
         </CustomRow>
         <CustomRow>
           <label>가격</label>
-          <Input name={'price'} value={menu.price} type={'plain'} onChangeInput={e => onChangeBreadMenuInput(idx, 'price', e.target.value)} />
+          <Input name={'price'} value={menu.price.toLocaleString()} type={'plain'} onChangeInput={e => onChangeBreadMenuInput(idx, 'price', e.target.value)} />
         </CustomRow>
         <BtnWrapper>
           <Button text={'메뉴 삭제'} type={'gray'} btnSize={'small'} onClickBtn={() => onRemoveBreadMenu(idx)} />

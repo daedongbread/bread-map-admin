@@ -15,13 +15,14 @@ const AppRoutes = () => {
         <Route path="/" element={<Layout />}>
           <Route index element={<Navigate to={Path.BAKERIES} />} />
           <Route path={Path.BAKERIES} element={<BakeriesContainer />} />
-          <Route path={`${Path.BAKERIES}/:id`} element={<BakeryDetailContainer />} />
-          <Route path={`${Path.BAKERIES}/new-bakery`} element={<BakeryDetailContainer />} />
+          <Route path={`${Path.BAKERIES}/new`} element={<BakeryDetailContainer />} />
+          <Route path={`${Path.BAKERIES}/:bakeryId`} element={<BakeryDetailContainer />} />
           <Route path={`${Path.BAKERY_REQUEST}`} element={<Tess />} />
           <Route path={`${Path.USERS}`} element={<Tess />} />
           <Route path={`${Path.USER_REPORT}`} element={<Tess />} />
           <Route path={`${Path.USER_REPORT}/:id`} element={<Tess />} />
         </Route>
+        <Route path={'*'} element={<div>Not Found</div>} />
       </Routes>
     </Router>
   );
