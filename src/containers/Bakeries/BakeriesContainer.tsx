@@ -1,32 +1,31 @@
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Column } from 'react-table';
-import { BakeriesItemEntity, useGetBakeries } from '@/apis';
+import { useGetBakeries } from '@/apis';
 import { BakeriesTable } from '@/components/Bakeries';
-import { Button, TableData, SearchBar, Pagination, CompleteStatus as Status } from '@/components/Shared';
-import type { CompleteStatusProps as StatusProps } from '@/components/Shared';
+import { Button, SearchBar, Pagination, CompleteStatus as Status } from '@/components/Shared';
 
 import Routes from '@/constants/routes';
 import usePagination from '@/hooks/usePagination';
 
+import { bakeryUtils } from '@/utils';
 import styled from '@emotion/styled';
-
-type BakeriesTableData = TableData<Omit<BakeriesItemEntity, 'status'> & { status: StatusProps; notification: string }>;
 
 export const BakeriesContainer = () => {
   const navigate = useNavigate();
-  const { currPage, leftPosition, onClickPage, onClickNext, onClickPrev, onClickEnd, onClickStart } = usePagination(TOTAL_COUNT, PER_COUNT);
+  const { currPage, totalItemCount, leftPosition, onChangeTotalCount, onClickPage, onClickNext, onClickPrev, onClickEnd, onClickStart } = usePagination({
+    perCount: PER_COUNT,
+  });
 
-  const [bakeries, setBakeries] = React.useState<BakeriesTableData>([]);
+  const { data, error, loading, fetching } = useGetBakeries({ page: currPage });
+  const bakeriesRow = data?.bakeries.map(bakery => ({ ...bakery, notification: '', status: bakeryUtils.formatStatusColumn(bakery.status) }));
+  // 추후 알람영역 활성화
 
   React.useEffect(() => {
-    const { bakeries, loading } = useGetBakeries({ page: currPage });
-    // loading중일때 로딩화면 보여주기
-    console.log(currPage, 'bakeries', bakeries);
-    setBakeries(bakeries);
-  }, [currPage]);
+    if (data && data.totalCount) onChangeTotalCount(data.totalCount);
+  }, [data]);
 
-  const bakeryColumns = useMemo(() => columns, []);
+  const bakeryColumns = useMemo(() => COLUMNS, []);
 
   const onClickTableRow = () => {
     navigate(`${Routes.BAKERIES}/4`);
@@ -36,6 +35,18 @@ export const BakeriesContainer = () => {
     navigate(`${Routes.BAKERIES}/new`);
   };
 
+  if (loading) {
+    return <div>로딩중..</div>; // 에러 화면 or 메세지 필요
+  }
+
+  if (fetching) {
+    return <div>fetching...</div>;
+  }
+
+  if (error || !bakeriesRow) {
+    return <div>error...</div>;
+  }
+
   return (
     <Container>
       <TopContainer>
@@ -44,9 +55,9 @@ export const BakeriesContainer = () => {
         </SearchBarWrapper>
         <Button text={'신규등록'} type={'orange'} btnSize={'medium'} onClickBtn={onClickCreate} />
       </TopContainer>
-      <BakeriesTable columns={bakeryColumns} data={bakeries} rowClickFn={onClickTableRow} />
+      <BakeriesTable columns={bakeryColumns} data={bakeriesRow} rowClickFn={onClickTableRow} />
       <Pagination
-        totalCount={TOTAL_COUNT}
+        totalCount={totalItemCount}
         perCount={PER_COUNT}
         currPage={currPage}
         leftPosition={leftPosition}
@@ -60,7 +71,7 @@ export const BakeriesContainer = () => {
   );
 };
 
-const columns: (Column & { percentage: number })[] = [
+const COLUMNS: (Column & { percentage: number })[] = [
   { accessor: 'bakeryId', Header: 'Bakery_ID', percentage: 10 },
   { accessor: 'name', Header: '빵집이름', percentage: 25 },
   { accessor: 'notification', Header: '알람', percentage: 35 },
@@ -74,8 +85,7 @@ const columns: (Column & { percentage: number })[] = [
   },
 ];
 
-const TOTAL_COUNT = 500;
-const PER_COUNT = 15;
+const PER_COUNT = 20; // default로 20 놓을지 고민
 
 const Container = styled.div`
   padding: 3rem 6rem;

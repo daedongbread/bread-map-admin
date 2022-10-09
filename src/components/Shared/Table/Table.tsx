@@ -4,6 +4,11 @@ import styled from '@emotion/styled';
 import { TableProps } from './types';
 
 export const Table = ({ columns, data, rowClickFn }: TableProps) => {
+  console.log('data', data);
+  if (!data) {
+    console.log('err');
+    return;
+  }
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data });
 
   if (columns.reduce((prev, curr) => prev + curr.percentage, 0) !== 100) {
@@ -61,7 +66,7 @@ const TableWrapper = styled.table`
   th,
   td {
     display: inline-block;
-    padding: 1rem 0;
+    padding: 1rem 0.8rem;
     min-width: 12rem;
     display: flex;
     justify-content: center;
@@ -84,6 +89,7 @@ const Th = styled.th<{ percentage?: number | undefined }>`
 `;
 
 const Td = styled.td<{ percentage?: number | undefined }>`
+  text-align: center;
   width: ${({ percentage }) => (percentage ? `${percentage}%` : '100%')};
 `;
 

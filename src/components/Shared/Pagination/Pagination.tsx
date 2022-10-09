@@ -86,7 +86,7 @@ const PagesWrapper = styled.div<{ currPage: number; left: number }>`
 
   ul {
     position: absolute;
-    width: 1000vw;
+    width: 100000vw;
     left: ${({ left }) => `-${left}rem`};
     top: 50%;
     transform: translateY(-50%);

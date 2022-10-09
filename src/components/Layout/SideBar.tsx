@@ -24,7 +24,7 @@ export const SideBar = () => {
       </Header>
       <ul>
         {SidebarMenu.map(menu => (
-          <MenuLink to={menu.path}>
+          <MenuLink key={menu.path} to={menu.path}>
             <MenuItem icon={menu.icon} name={menu.name} noti={menu.noti} active={isCurrent(menu.path)} />
           </MenuLink>
         ))}

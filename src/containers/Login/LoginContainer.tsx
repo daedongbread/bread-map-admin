@@ -1,33 +1,49 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useRequestLogin } from '@/apis';
+import { useAuth } from '@/apis';
 import { Logo } from '@/components/Login';
 import { LoginForm } from '@/components/Login/LoginForm';
 import { Button } from '@/components/Shared';
-import Routes from '@/constants/routes';
 import useForm from '@/hooks/useForm';
+import useToggle from '@/hooks/useToggle';
+import { loginStorage } from '@/utils';
 import styled from '@emotion/styled';
 
 export type LoginForm = typeof initialForm;
 
 export const LoginContainer = () => {
-  const navigate = useNavigate();
-  const { form, onChangeForm } = useForm<LoginForm>(initialForm);
+  const { login } = useAuth();
+  const { data, mutate, error } = login();
 
-  const { mutate } = useRequestLogin({ successFn: () => navigate(Routes.BAKERIES) });
+  const { activate: isRemembered, onActive: onActiveRemember, onInactive: onInactiveRemeber, onToggleActive: onToggleRemember } = useToggle();
+  const { form, onChangeForm, onSetForm } = useForm<LoginForm>(initialForm);
+
+  React.useEffect(() => {
+    const { form, isRemembered } = loginStorage.getMultipleItems(['form', 'isRemembered']);
+    if (form && isRemembered) {
+      onActiveRemember();
+      onSetForm(form);
+    } else {
+      onInactiveRemeber();
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (error) {
+      window.confirm('로그인 에러입니다. 대동빵지도 팀에게 문의주세요.');
+    }
+  });
 
   const onSubmit = () => {
     const { email, password } = form;
-    mutate({ email, password });
-    navigate(Routes.BAKERIES); // api 연동후 제거
+    mutate({ email, password, isRemembered });
   };
 
   return (
     <Container>
       <Wrapper>
         <Logo />
-        <LoginForm form={form} onChangeForm={onChangeForm} />
-        <Button type={'orange'} text={'로그인'} onClickBtn={onSubmit} />
+        <LoginForm form={form} onChangeForm={onChangeForm} isRemembered={isRemembered} onToggleRemember={onToggleRemember} />
+        <Button type={'orange'} text={'로그인'} onClickBtn={() => onSubmit()} />
       </Wrapper>
     </Container>
   );

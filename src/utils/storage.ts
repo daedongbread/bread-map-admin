@@ -1,19 +1,19 @@
+import { EncryptStorage } from 'encrypt-storage';
+
 enum Storage {
   AccessToken = 'accessToken',
   RefreshToken = 'refreshToken',
+  Token = 'token',
+  Form = 'form',
+  IsRemembered = 'isRemembered',
 }
 
-const storage = {
-  get: (key: string): string | null => {
-    const data = localStorage.getItem(key);
-    return data ? JSON.parse(data) : null;
-  },
-  set: (key: string, value: string) => {
-    localStorage.setItem(key, JSON.stringify(value));
-  },
-  remove: (key: string) => {
-    localStorage.removeItem(key);
-  },
-};
+const loginStorage = new EncryptStorage('secret-key-value', {
+  prefix: '@login',
+});
 
-export { storage, Storage };
+const userStorage = new EncryptStorage('secret-key-value', {
+  prefix: '@user',
+});
+
+export { loginStorage, userStorage, Storage };

@@ -1,14 +1,14 @@
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { Storage, storage } from '@/utils';
+import { Storage, userStorage } from '@/utils';
 
 export const reqSuccessFn = (config: AxiosRequestConfig) => {
   if (config.headers === undefined) {
     config.headers = {};
   }
 
-  const accessToken = storage.get(Storage.AccessToken);
-  if (accessToken) {
-    config.headers['Authorization'] = `Bearer ${accessToken}`;
+  const token = userStorage.getItem(Storage.Token);
+  if (token && token.accessToken) {
+    config.headers['Authorization'] = `Bearer ${token.accessToken}`;
   }
 
   return config;

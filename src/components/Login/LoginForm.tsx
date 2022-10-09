@@ -1,6 +1,8 @@
 import React from 'react';
 import { useRequestLogin } from '@/apis';
 import { Input } from '@/components/Shared';
+import Check from '@/components/Shared/Icons/Check.svg';
+import CheckOrange from '@/components/Shared/Icons/CheckOrange.svg';
 import { LoginForm as LoginFormType } from '@/containers/Login';
 import styled from '@emotion/styled';
 import { InputProps } from '../Shared/Input/Input';
@@ -8,9 +10,12 @@ import { InputProps } from '../Shared/Input/Input';
 type Props = {
   form: LoginFormType;
   onChangeForm: (key: string, value: any) => void;
+  isRemembered: boolean;
+  onToggleRemember: () => void;
 };
 
-export const LoginForm = ({ form, onChangeForm }: Props) => {
+export const LoginForm = ({ form, onChangeForm, isRemembered, onToggleRemember }: Props) => {
+  console.log('form', form);
   return (
     <div>
       <Wrapper>
@@ -28,7 +33,7 @@ export const LoginForm = ({ form, onChangeForm }: Props) => {
         ))}
       </Wrapper>
       <CheckBox>
-        <input type="checkbox" id="remember" />
+        <input type="checkbox" id="remember" checked={isRemembered} onChange={onToggleRemember} />
         <label htmlFor="remember">ID/PW 기억하기</label>
       </CheckBox>
     </div>
@@ -53,11 +58,46 @@ const InputWrapper = styled.div`
 
 const CheckBox = styled.div`
   display: flex;
+  height: 24px;
+  align-items: center;
   margin-bottom: 1.6rem;
+  position: relative;
 
-  > label {
+  label {
+    font-size: ${({ theme }) => theme.size.fontMd};
+    color: ${({ theme }) => theme.color.gray600};
+    margin-left: 3rem;
+  }
+
+  input[type='checkbox'] {
+    display: none;
+  }
+
+  input[type='checkbox'] + label:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-image: url(${Check});
+    width: 24px;
+    height: 24px;
+  }
+
+  input[type='checkbox']:checked + label:before {
+    background-image: url(${CheckOrange});
+  }
+
+  /* input[type='checkbox']:checked {
+    background 'url(Check)';
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 1.5rem;
+    background-color: #ffbdb4;
+  } */
+
+  /* > label {
     color: ${({ theme }) => theme.color.gray600};
     font-size: 1.6rem;
     margin-left: 5px;
-  }
+  } */
 `;
