@@ -27,8 +27,8 @@ export const BakeriesContainer = () => {
 
   const bakeryColumns = useMemo(() => COLUMNS, []);
 
-  const onClickTableRow = () => {
-    navigate(`${Routes.BAKERIES}/4`);
+  const onClickBakeryItem = (bakeryId: number) => {
+    navigate(`${Routes.BAKERIES}/${bakeryId}`);
   };
 
   const onClickCreate = () => {
@@ -55,7 +55,7 @@ export const BakeriesContainer = () => {
         </SearchBarWrapper>
         <Button text={'신규등록'} type={'orange'} btnSize={'medium'} onClickBtn={onClickCreate} />
       </TopContainer>
-      <BakeriesTable columns={bakeryColumns} data={bakeriesRow} rowClickFn={onClickTableRow} />
+      <BakeriesTable columns={bakeryColumns} data={bakeriesRow} rowClickFn={onClickBakeryItem} />
       <Pagination
         totalCount={totalItemCount}
         perCount={PER_COUNT}

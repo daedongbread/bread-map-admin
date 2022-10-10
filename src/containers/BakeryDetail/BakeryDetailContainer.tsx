@@ -30,9 +30,9 @@ import {
 import { color } from '@/styles';
 import styled from '@emotion/styled';
 
-export type BakeryForm = Omit<BakeryDetailEntity, 'image' | 'status' | 'menu'> & {
+export type BakeryForm = Omit<BakeryDetailEntity, 'image' | 'status' | 'productList'> & {
   status: BakeryStatus | null;
-  menu: (Omit<BakeryMenuEntity, 'image'> & {
+  productList: (Omit<BakeryMenuEntity, 'image'> & {
     image: File | string | null; // 수정시에 menu img는 file or str (빈값), 데이터 내려올때 null일수 있음.
   })[];
 };
@@ -50,13 +50,24 @@ export const BakeryDetailContainer = () => {
   const { form, formBakeryImg, formLinks, openedLinkIdx } = useAppSelector(selector => selector.bakery);
   const { isOpen, selectedOption, onToggleSelectBox, onSelectOption } = useSelectBox(options[0]);
 
+  const { bakery, loading } = useGetBakery({ bakeryId: Number(bakeryId) });
+
   React.useEffect(() => {
-    if (bakeryId) {
-      const { bakery, loading } = useGetBakery({ bakeryId: Number(bakeryId) });
+    if (bakery) {
       dispatch(setForm({ form: bakery })); // image(bakery img 제거하기)
-      // setBakeryImg(bakery.image) => image가 string으로 내려오면 File로?
+      // setBakeryImg(bakery.image); // => image가 string으로 내려오면 File로?
     }
-  }, []);
+  }, [bakery]);
+
+  React.useEffect(() => {
+    if (bakery) {
+      if (!bakery.productList.length) {
+        dispatch(addMenu());
+      }
+
+      onSelectOption(options.find(option => option.value === bakery.status)); // 초기값을 null이 아니라 미게시로 셋팅하면 될거같긴한데?
+    }
+  }, [bakery]);
 
   React.useEffect(() => {
     const links: { key: string; value: string }[] = [];

@@ -4,11 +4,10 @@ import styled from '@emotion/styled';
 import { TableProps } from './types';
 
 export const Table = ({ columns, data, rowClickFn }: TableProps) => {
-  console.log('data', data);
   if (!data) {
-    console.log('err');
-    return;
+    throw new Error('Table component의 data가 없습니다.');
   }
+
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data });
 
   if (columns.reduce((prev, curr) => prev + curr.percentage, 0) !== 100) {
@@ -29,10 +28,10 @@ export const Table = ({ columns, data, rowClickFn }: TableProps) => {
         ))}
       </TableHead>
       <TableBody {...getTableBodyProps()}>
-        {rows.map((row: Row) => {
+        {rows.map((row: Row<{ [key: string]: any }>) => {
           prepareRow(row);
           return (
-            <tr {...row.getRowProps()} onClick={rowClickFn}>
+            <tr {...row.getRowProps()} onClick={() => rowClickFn && rowClickFn(row.original.bakeryId as number)}>
               {row.cells.map((cell: Cell, idx: number) => {
                 return (
                   <Td percentage={columns[idx].percentage} {...cell.getCellProps()}>

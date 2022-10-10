@@ -19,7 +19,7 @@ export const MenuForm = ({ label, form, onChangeMenuInput, onRemoveMenu, onAddMe
     <Row alignTop>
       <label>{label}</label>
       <RowContents>
-        {form.menu.map((item, idx) => (
+        {form.productList?.map((item, idx) => (
           <MenuItem
             key={`menu-${idx}`}
             idx={idx}

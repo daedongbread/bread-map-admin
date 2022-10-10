@@ -6,7 +6,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 
 // 타입지정시 reducer type error..
 export type BakeryForm = BakeryDetailBaseEntity & {
-  menu: {
+  productList: {
     breadId: number;
     name: string;
     price: number;
@@ -29,7 +29,7 @@ const initialBakeryForm: BakeryForm = {
   websiteURL: '',
   phoneNumber: '',
   facilityInfoList: [],
-  menu: [
+  productList: [
     {
       breadId: 0, // 생성시에만 있음
       name: '',
@@ -72,6 +72,10 @@ const bakerySlice = createSlice({
     setForm(state, action: PayloadAction<{ form: BakeryDetailEntity }>) {
       const { form } = action.payload;
       state.form = form;
+    },
+    changeBakeryStatus(state, action: PayloadAction<{ status: string }>) {
+      const { status } = action.payload;
+      state.form.status = status as BakeryStatus;
     },
     changeBakeryImg(state, action: PayloadAction<{ file: File }>) {
       const { file } = action.payload;
@@ -122,21 +126,21 @@ const bakerySlice = createSlice({
     },
     changeMenuInput(state, action: PayloadAction<{ currIdx: number; name: string; value: string }>) {
       const { currIdx, name, value } = action.payload;
-      const target = state.form.menu[currIdx];
-      state.form.menu.splice(currIdx, 1, { ...target, [name]: value });
+      const target = state.form.productList[currIdx];
+      state.form.productList.splice(currIdx, 1, { ...target, [name]: value });
     },
     removeMenu(state, action: PayloadAction<{ currIdx: number }>) {
       const { currIdx } = action.payload;
-      state.form.menu = state.form.menu.filter((meu, idx) => idx !== currIdx);
+      state.form.productList = state.form.productList.filter((meu, idx) => idx !== currIdx);
     },
     addMenu(state) {
       const breadId = 324; // random
-      state.form.menu.push({ breadId, name: '', price: 0, image: null });
+      state.form.productList.push({ breadId, name: '', price: 0, image: null });
     },
     changeMenuImg(state, action: PayloadAction<{ currIdx: number; file: File }>) {
       const { currIdx, file } = action.payload;
-      const target = state.form.menu[currIdx];
-      state.form.menu.splice(currIdx, 1, { ...target, image: file });
+      const target = state.form.productList[currIdx];
+      state.form.productList.splice(currIdx, 1, { ...target, image: file });
     },
   },
 });
@@ -145,6 +149,7 @@ export default bakerySlice.reducer;
 export const {
   changeForm,
   setForm,
+  changeBakeryStatus,
   changeBakeryImg,
   toggleLinkOption,
   selectLinkOption,

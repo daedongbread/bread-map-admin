@@ -30,7 +30,7 @@ export type BakeryDetailBaseEntity = {
 
 export type BakeryDetailEntity = BakeryDetailBaseEntity & {
   image: string | null;
-  facilityInfoList: any[];
-  menu: BakeryMenuEntity[];
+  facilityInfoList: string[]; // PARKING...
+  productList: BakeryMenuEntity[];
   status: BakeryStatus;
 };

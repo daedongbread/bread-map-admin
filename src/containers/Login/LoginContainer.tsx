@@ -5,7 +5,7 @@ import { LoginForm } from '@/components/Login/LoginForm';
 import { Button } from '@/components/Shared';
 import useForm from '@/hooks/useForm';
 import useToggle from '@/hooks/useToggle';
-import { loginStorage } from '@/utils';
+import { loginStorage, Storage } from '@/utils';
 import styled from '@emotion/styled';
 
 export type LoginForm = typeof initialForm;
@@ -18,7 +18,7 @@ export const LoginContainer = () => {
   const { form, onChangeForm, onSetForm } = useForm<LoginForm>(initialForm);
 
   React.useEffect(() => {
-    const { form, isRemembered } = loginStorage.getMultipleItems(['form', 'isRemembered']);
+    const { form, isRemembered } = loginStorage.getMultipleItems([Storage.Form, Storage.IsRemembered]);
     if (form && isRemembered) {
       onActiveRemember();
       onSetForm(form);

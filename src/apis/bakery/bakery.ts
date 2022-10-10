@@ -25,8 +25,8 @@ const getBakeries = async ({ page }: GetBakeriesPayload) => {
   return { bakeries: resp.data.contents, totalCount: resp.data.totalElements };
 };
 
-const getBakery = async (bakeryId: { bakeryId: number }) => {
-  const resp = await fetcher.get<BakeryDetailEntity>('bakery', { params: { bakeryId } });
+const getBakery = async ({ bakeryId }: { bakeryId: number }) => {
+  const resp = await fetcher.get<BakeryDetailEntity>(`bakery/${bakeryId}`);
   return resp.data;
 };
 

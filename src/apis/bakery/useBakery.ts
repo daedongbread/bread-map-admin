@@ -3,7 +3,9 @@ import { createBakery, getBakery, updateBakery } from './bakery';
 
 const useGetBakery = ({ bakeryId }: { bakeryId: number }) => {
   const queryKey = ['bakery', { bakeryId }] as const;
-  const { data, isLoading, isError, refetch } = useQuery(queryKey, () => getBakery({ bakeryId }));
+  const { data, isLoading, isError, refetch } = useQuery(queryKey, () => getBakery({ bakeryId }), {
+    enabled: Boolean(bakeryId),
+  });
   // enabled 필요한가?
   // const MOCK_DATA: GetBakeryResponse['data'] = {
   //   name: 'bakery',

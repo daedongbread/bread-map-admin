@@ -62,8 +62,8 @@ export const Form = ({
     formData.append('request', JSON.stringify({ ...form, ...linkPayload }));
 
     // 빵 메뉴 이미지 순회
-    if (form.menu.length) {
-      form.menu.forEach(bread => {
+    if (form.productList.length) {
+      form.productList.forEach(bread => {
         formData.append('breadImageList', bread.image || '');
       });
     }
