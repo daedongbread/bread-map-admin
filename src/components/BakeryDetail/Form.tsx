@@ -1,9 +1,11 @@
 import React from 'react';
 
+import { BakeryDetailEntity } from '@/apis';
 import { Button } from '@/components/Shared';
 import { BakeryForm } from '@/containers/BakeryDetail';
 
 import { BakeryFormChangeKey } from '@/store/slices/bakery';
+import { urlToFile } from '@/utils';
 import styled from '@emotion/styled';
 
 import { AddressForm } from './AddressForm';
@@ -13,10 +15,10 @@ import { Link, LinkForm } from './LinkForm';
 import { MenuForm } from './MenuForm';
 
 type Props = {
+  origin?: BakeryDetailEntity;
   form: BakeryForm;
   links: Link[];
   openedLinkIdx: number | null;
-  bakeryImg: File | null;
   onChangeForm: (payload: { name: BakeryFormChangeKey; value: never }) => void;
   onChangeBakeryImg: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onToggleLinkOption: (currIdx: number) => void;
@@ -33,10 +35,10 @@ type Props = {
 };
 
 export const Form = ({
+  origin,
   form,
   links,
   openedLinkIdx,
-  bakeryImg,
   onChangeForm,
   onChangeBakeryImg,
   onToggleLinkOption,
@@ -51,7 +53,7 @@ export const Form = ({
   onChangeMenuImg,
   onSaveForm,
 }: Props) => {
-  const onClickSave = () => {
+  const onClickSave = async () => {
     const formData = new FormData();
 
     // link에 대한 순회
@@ -59,19 +61,61 @@ export const Form = ({
     links.forEach(link => {
       linkPayload[link.key] = link.value;
     });
-    formData.append('request', JSON.stringify({ ...form, ...linkPayload }));
 
-    // 빵 메뉴 이미지 순회
+    const copiedForm = { ...form };
+    const { image, ...requestData } = copiedForm;
+    const request = new Blob([JSON.stringify({ ...requestData, ...linkPayload })], { type: 'application/json' });
+    formData.append('request', request);
+
+    //이미지들은 원본데이터(original)와 달라졌을 경우만 아래로직들 실행하기.
+    //메뉴들의 순서가 바뀔수있으므로, 순회해서 target을 찾는다.
+    //빵 메뉴 이미지 순회,
+    // 빵메뉴가 없으면 append X, 빵메뉴가 없을때 productImageList = [] 로 보내면 에러가 난다.
     if (form.productList.length) {
-      form.productList.forEach(bread => {
-        formData.append('breadImageList', bread.image || '');
-      });
+      if (origin) {
+        // 수정시
+        for (const bread of form.productList) {
+          let file: File | string = '';
+          const target = origin.productList.find(item => item.breadId === bread.breadId);
+
+          if (target) {
+            if (bread.image === target.image) {
+              file = target.image ? target.image : '';
+            } else {
+              file = bread.image ? await urlToFile(bread.image as string, bread.name) : '';
+            }
+          } else {
+            file = bread.image ? await urlToFile(bread.image as string, bread.name) : '';
+          }
+          formData.append('productImageList', file);
+        }
+      } else {
+        // 생성시
+        for (const bread of form.productList) {
+          const file = bread.image ? await urlToFile(bread.image as string, bread.name) : '';
+          formData.append('productImageList', file);
+        }
+      }
     }
 
     // 빵집 이미지 추가
-    formData.append('bakeryImage', bakeryImg || '');
+    // 빵집 이미지없으면 append X
+    if (form.image) {
+      let file: File | string = '';
+      if (origin) {
+        if (form.image === origin.image) {
+          file = origin.image ? origin.image : '';
+        } else {
+          file = await urlToFile(form.image, form.name);
+        }
+      }
+      formData.append('bakeryImage', file);
+    }
 
-    const payload = formData;
+    const payload = await formData;
+    for (const [key, value] of payload) {
+      console.log(`${key}: ${value}`);
+    }
     onSaveForm(payload);
   };
 
@@ -80,7 +124,7 @@ export const Form = ({
       <Forms>
         <div>
           <BasicForm label={'삥집명'} form={form} onChangeForm={onChangeForm} name={'name'} />
-          <BakeryImgForm label={'대표이미지'} previewImg={bakeryImg} onChangeBakeryImg={onChangeBakeryImg} />
+          <BakeryImgForm label={'대표이미지'} previewImg={form.image} onChangeBakeryImg={onChangeBakeryImg} />
           <AddressForm label={'주소'} form={form} onChangeForm={onChangeForm} />
           <BasicForm label={'시간'} form={form} onChangeForm={onChangeForm} name={'hours'} placeholder={'엔터키를 치면 줄바꿈이 적용됩니다.'} />
           <LinkForm

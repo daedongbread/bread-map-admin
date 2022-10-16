@@ -17,6 +17,7 @@ export type BakeryMenuEntity = {
 
 export type BakeryDetailBaseEntity = {
   name: string;
+  image: string | null;
   address: string;
   latitude: number;
   longitude: number;
@@ -29,7 +30,6 @@ export type BakeryDetailBaseEntity = {
 };
 
 export type BakeryDetailEntity = BakeryDetailBaseEntity & {
-  image: string | null;
   facilityInfoList: string[]; // PARKING...
   productList: BakeryMenuEntity[];
   status: BakeryStatus;

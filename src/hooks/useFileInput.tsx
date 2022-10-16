@@ -17,7 +17,7 @@ const useFileInput = () => {
         // storage imag ?
         return file;
       } else {
-        return '';
+        return file;
       }
     } else {
       return URL.createObjectURL(file);

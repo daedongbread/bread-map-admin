@@ -10,15 +10,15 @@ export type BakeryForm = BakeryDetailBaseEntity & {
     breadId: number;
     name: string;
     price: number;
-    image: File | string | null;
+    image: string | null;
   }[];
   status: BakeryStatus | null;
-  facilityInfoList: any[];
+  facilityInfoList: string[];
 };
 
 const initialBakeryForm: BakeryForm = {
   name: '',
-  // image: null, // 빵집 이미지. 받아올때 없는걸로
+  image: null,
   address: '',
   latitude: 0,
   longitude: 0,
@@ -37,7 +37,7 @@ const initialBakeryForm: BakeryForm = {
       image: '', // 조회시에만 이미지 여기에 들어옴
     },
   ],
-  status: null,
+  status: 'UNPOSTING',
 };
 
 export type BakeryFormChangeKey = keyof BakeryDetailBaseEntity;
@@ -46,7 +46,6 @@ interface BakeryState {
   loading: boolean;
   error: boolean;
   form: BakeryForm;
-  formBakeryImg: File | null;
   formLinks: Link[];
   openedLinkIdx: number | null;
 }
@@ -55,7 +54,6 @@ const initialState: BakeryState = {
   loading: false,
   error: false,
   form: initialBakeryForm,
-  formBakeryImg: null,
   formLinks: [],
   openedLinkIdx: null,
 };
@@ -77,9 +75,9 @@ const bakerySlice = createSlice({
       const { status } = action.payload;
       state.form.status = status as BakeryStatus;
     },
-    changeBakeryImg(state, action: PayloadAction<{ file: File }>) {
-      const { file } = action.payload;
-      state.formBakeryImg = file;
+    changeBakeryImg(state, action: PayloadAction<{ imgPreview: string }>) {
+      const { imgPreview } = action.payload;
+      state.form.image = imgPreview;
     },
     toggleLinkOption(state, action: PayloadAction<{ currIdx: number }>) {
       const { openedLinkIdx } = state;
@@ -137,10 +135,10 @@ const bakerySlice = createSlice({
       const breadId = 324; // random
       state.form.productList.push({ breadId, name: '', price: 0, image: null });
     },
-    changeMenuImg(state, action: PayloadAction<{ currIdx: number; file: File }>) {
-      const { currIdx, file } = action.payload;
+    changeMenuImg(state, action: PayloadAction<{ currIdx: number; imgPreview: string }>) {
+      const { currIdx, imgPreview } = action.payload;
       const target = state.form.productList[currIdx];
-      state.form.productList.splice(currIdx, 1, { ...target, image: file });
+      state.form.productList.splice(currIdx, 1, { ...target, image: imgPreview });
     },
   },
 });

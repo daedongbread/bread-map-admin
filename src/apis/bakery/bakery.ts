@@ -31,11 +31,22 @@ const getBakery = async ({ bakeryId }: { bakeryId: number }) => {
 };
 
 const createBakery = async ({ payload }: CreateUpdateBakeryPayload) => {
-  await fetcher.post('bakery', { data: { ...payload } });
+  await fetcher.post('bakery', payload, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 };
 
 const updateBakery = async ({ bakeryId, payload }: { bakeryId: number } & CreateUpdateBakeryPayload) => {
-  await fetcher.patch('bakery', { params: { bakeryId }, data: { ...payload } });
+  for (const [key, value] of payload) {
+    console.log(`@@@${key}: ${value}`);
+  }
+  await fetcher.post(`bakery/${bakeryId}`, payload, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 };
 
 export { getBakeries, getBakery, createBakery, updateBakery };

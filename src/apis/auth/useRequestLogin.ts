@@ -10,6 +10,7 @@ const EXPIRED_DATE = 60 * 60 * 1000;
 
 let REFRESH_TIME_OUT: ReturnType<typeof setTimeout> | null = null;
 
+// 로그인 로직 axios로..
 export const refreshTimeOut = (callBack: () => void, timeout?: number) => {
   if (REFRESH_TIME_OUT) {
     clearTimeout(REFRESH_TIME_OUT);
@@ -54,7 +55,7 @@ export const useAuth = () => {
           removeUser();
         }
 
-        navigate(Routes.BAKERIES);
+        navigate(Routes.BAKERIES, { replace: true });
       },
       onError: onErrorLogin,
     });
@@ -73,7 +74,7 @@ export const useAuth = () => {
       clearTimeout(REFRESH_TIME_OUT);
     }
     userStorage.removeItem(Storage.Token);
-    navigate(Routes.LOGIN);
+    navigate(Routes.LOGIN, { replace: true });
   };
 
   return { login: useRequestLogin, logout };

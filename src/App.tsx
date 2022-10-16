@@ -10,18 +10,11 @@ import { Storage, userStorage } from './utils';
 const App = () => {
   const navigate = useNavigate();
   const { mutateAsync } = useRequestRefresh();
-  const [token, setToken] = React.useState<any>(null);
   const { getCurrPath } = usePath();
-
-  React.useEffect(() => {
-    const token = userStorage.getItem<{ accessToken: string; refreshToken: string }>(Storage.Token);
-    if (token) {
-      setToken(token);
-    }
-  }, []);
 
   // 추후 axios에서 처리하는걸로 변경하기
   React.useEffect(() => {
+    const token = userStorage.getItem<{ accessToken: string; refreshToken: string }>(Storage.Token);
     if (token) {
       const { accessToken, refreshToken } = token;
       mutateAsync({ accessToken, refreshToken });
@@ -32,7 +25,7 @@ const App = () => {
       navigate(Routes.LOGIN);
       // redirect... router 내부에 넣어야 실행가능
     }
-  }, [token, mutateAsync]);
+  }, [mutateAsync]);
 
   return <Route />;
 };
