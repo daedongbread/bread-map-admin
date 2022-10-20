@@ -36,7 +36,7 @@ export const SideBar = () => {
 const SidebarMenu = [
   {
     name: '제보관리',
-    path: Routes.BAKERY_REQUEST,
+    path: Routes.BAKERY_REPORT,
     icon: <Pencil />,
     noti: 43,
   },

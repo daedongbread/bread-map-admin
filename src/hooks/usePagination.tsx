@@ -3,16 +3,13 @@ import React, { useCallback, useState } from 'react';
 const LI_MARGIN = 0.6; // 양쪽 마진 합, rem
 const LI_WIDTH = 3.5; // rem
 const PAGING_COUNT = 5; // pagination 컴포넌트의 페이징 갯수
+// PER_COUNT = 20; // 한 페이지의 리스트 갯수. Pagination 컴포넌트에서도 써야하기때문에 Pagination이 쓰이는 곳마다 선언필요 -> 어떻게해야 안쓸수 있을지..?
 
 const usePagination = ({ totalCount, perCount }: { totalCount?: number; perCount: number }) => {
-  const [currPage, setCurrPage] = useState(1);
+  const [currPage, setCurrPage] = useState(0);
   const [leftPosition, setLeftPosition] = useState(0);
   const [lastIndexLeft, setLastIndexLeft] = useState(0);
   const [totalItemCount, setTotalItemCount] = useState(0);
-
-  // const pageCount = totalCount / perCount; // 페이지 갯수
-  // const index = Math.floor(pageCount / PAGING_COUNT);
-  // const lastIndexLeft = (LI_MARGIN + LI_WIDTH) * PAGING_COUNT * index;
 
   React.useEffect(() => {
     if (totalCount) {
@@ -22,7 +19,6 @@ const usePagination = ({ totalCount, perCount }: { totalCount?: number; perCount
 
   React.useEffect(() => {
     const pageCount = totalItemCount / perCount; // 페이지 갯수
-    console.log('pageCount', pageCount);
     const index = Math.floor(pageCount / PAGING_COUNT);
     const left = (LI_MARGIN + LI_WIDTH) * PAGING_COUNT * index;
     setLastIndexLeft(left);

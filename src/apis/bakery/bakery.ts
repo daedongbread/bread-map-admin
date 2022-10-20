@@ -21,7 +21,6 @@ export type CreateUpdateBakeryPayload = {
 
 const getBakeries = async ({ page }: GetBakeriesPayload) => {
   const resp = await fetcher.get<GetBakeriesResponse>(`/bakery/all?page=${page}`);
-  console.log('resp', resp);
   return { bakeries: resp.data.contents, totalCount: resp.data.totalElements };
 };
 

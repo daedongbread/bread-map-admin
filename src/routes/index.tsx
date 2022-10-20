@@ -5,6 +5,8 @@ import Tess from '@/components/Tess';
 import Path from '@/constants/routes';
 import { BakeriesContainer } from '@/containers/Bakeries';
 import { BakeryDetailContainer } from '@/containers/BakeryDetail';
+import { BakeryReportDetailContainer } from '@/containers/BakeryReportDetail';
+import { BakeryReportsContainer } from '@/containers/BakeryReports';
 import { LoginContainer } from '@/containers/Login/LoginContainer';
 
 const AppRoutes = () => {
@@ -16,7 +18,8 @@ const AppRoutes = () => {
         <Route path={Path.BAKERIES} element={<BakeriesContainer />} />
         <Route path={`${Path.BAKERIES}/new`} element={<BakeryDetailContainer />} />
         <Route path={`${Path.BAKERIES}/:bakeryId`} element={<BakeryDetailContainer />} />
-        <Route path={`${Path.BAKERY_REQUEST}`} element={<Tess />} />
+        <Route path={`${Path.BAKERY_REPORT}`} element={<BakeryReportsContainer />} />
+        <Route path={`${Path.BAKERY_REPORT}/:reportId`} element={<BakeryReportDetailContainer />} />
         <Route path={`${Path.USERS}`} element={<Tess />} />
         <Route path={`${Path.USER_REPORT}`} element={<Tess />} />
         <Route path={`${Path.USER_REPORT}/:id`} element={<Tess />} />

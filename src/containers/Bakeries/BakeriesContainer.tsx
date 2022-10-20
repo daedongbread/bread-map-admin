@@ -8,7 +8,7 @@ import { Button, SearchBar, Pagination, CompleteStatus as Status } from '@/compo
 import Routes from '@/constants/routes';
 import usePagination from '@/hooks/usePagination';
 
-import { bakeryUtils } from '@/utils';
+import { formatPostStatusColumn } from '@/utils';
 import styled from '@emotion/styled';
 
 export const BakeriesContainer = () => {
@@ -18,7 +18,7 @@ export const BakeriesContainer = () => {
   });
 
   const { data, error, loading, fetching } = useGetBakeries({ page: currPage });
-  const bakeriesRow = data?.bakeries.map(bakery => ({ ...bakery, notification: '', status: bakeryUtils.formatStatusColumn(bakery.status) }));
+  const bakeriesRow = data?.bakeries.map(bakery => ({ ...bakery, notification: '', status: formatPostStatusColumn(bakery.status) }));
   // 추후 알람영역 활성화
 
   React.useEffect(() => {
@@ -28,6 +28,7 @@ export const BakeriesContainer = () => {
   const bakeryColumns = useMemo(() => COLUMNS, []);
 
   const onClickBakeryItem = (bakeryId: number) => {
+    console.log('bakeryId', bakeryId);
     navigate(`${Routes.BAKERIES}/${bakeryId}`);
   };
 
@@ -55,7 +56,7 @@ export const BakeriesContainer = () => {
         </SearchBarWrapper>
         <Button text={'신규등록'} type={'orange'} btnSize={'medium'} onClickBtn={onClickCreate} />
       </TopContainer>
-      <BakeriesTable columns={bakeryColumns} data={bakeriesRow} rowClickFn={onClickBakeryItem} />
+      <BakeriesTable route={Routes.BAKERIES} columns={bakeryColumns} data={bakeriesRow} rowClickFn={onClickBakeryItem} />
       <Pagination
         totalCount={totalItemCount}
         perCount={PER_COUNT}
@@ -72,9 +73,9 @@ export const BakeriesContainer = () => {
 };
 
 const COLUMNS: (Column & { percentage: number })[] = [
-  { accessor: 'bakeryId', Header: 'Bakery_ID', percentage: 10 },
+  { accessor: 'bakeryId', Header: 'Bakery_ID', percentage: 15 },
   { accessor: 'name', Header: '빵집이름', percentage: 25 },
-  { accessor: 'notification', Header: '알람', percentage: 35 },
+  { accessor: 'notification', Header: '알람', percentage: 30 },
   { accessor: 'createdAt', Header: '최초 등록일', percentage: 10 },
   { accessor: 'modifiedAt', Header: '마지막 수정일', percentage: 10 },
   {

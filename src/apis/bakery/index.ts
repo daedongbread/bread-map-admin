@@ -1,2 +1,2 @@
-export * from './useGetBakeries';
+export * from './useGetBakeries'; // -> useBakeries?
 export * from './types';

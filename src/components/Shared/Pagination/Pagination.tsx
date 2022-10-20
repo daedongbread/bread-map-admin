@@ -45,7 +45,7 @@ export const Pagination = ({
             {Array(totalPages)
               .fill('')
               .map((_, i) => (
-                <Li key={i} active={currPage === i + 1} onClick={() => onClickPage(i + 1)}>
+                <Li key={i} active={currPage === i} onClick={() => onClickPage(i)}>
                   {i + 1}
                 </Li>
               ))}

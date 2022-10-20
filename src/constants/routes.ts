@@ -1,7 +1,7 @@
 enum Routes {
   LOGIN = '/login',
   BAKERIES = '/bakeries',
-  BAKERY_REQUEST = '/bakery-request',
+  BAKERY_REPORT = '/bakery-report',
   USERS = '/users',
   USER_REPORT = '/user-report',
 }

@@ -1,6 +1,6 @@
 import { theme } from '@/styles';
 
-const formatStatusColumn = (status: 'POSTING' | 'UNPOSTING') => {
+const formatPostStatusColumn = (status: 'POSTING' | 'UNPOSTING') => {
   switch (status) {
     case 'POSTING':
       return {
@@ -16,4 +16,4 @@ const formatStatusColumn = (status: 'POSTING' | 'UNPOSTING') => {
   }
 };
 
-export { formatStatusColumn };
+export { formatPostStatusColumn };

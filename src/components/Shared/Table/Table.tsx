@@ -1,9 +1,35 @@
 import React from 'react';
 import { Cell, HeaderGroup, Row, useTable } from 'react-table';
+import Routes from '@/constants/routes';
 import styled from '@emotion/styled';
 import { TableProps } from './types';
 
-export const Table = ({ columns, data, rowClickFn }: TableProps) => {
+type obj = {
+  [key: string]: any;
+};
+
+const getId = (original: obj, route: Routes): number => {
+  let id: number;
+  console.log('route', route);
+  switch (route) {
+    case Routes.BAKERIES:
+      id = original.bakeryId;
+      console.log('--. ', id);
+      break;
+    case Routes.BAKERY_REPORT:
+      id = original.reportId;
+      console.log(id);
+      break;
+    default:
+      id = 0;
+      break;
+  }
+
+  return id;
+};
+
+// TODO: 나중에 테이블컴포넌트 만들기
+export const Table = ({ route, columns, data, rowClickFn }: TableProps) => {
   if (!data) {
     throw new Error('Table component의 data가 없습니다.');
   }
@@ -31,7 +57,7 @@ export const Table = ({ columns, data, rowClickFn }: TableProps) => {
         {rows.map((row: Row<{ [key: string]: any }>) => {
           prepareRow(row);
           return (
-            <tr {...row.getRowProps()} onClick={() => rowClickFn && rowClickFn(row.original.bakeryId as number)}>
+            <tr {...row.getRowProps()} onClick={() => rowClickFn && rowClickFn(getId(row.original, route))}>
               {row.cells.map((cell: Cell, idx: number) => {
                 return (
                   <Td percentage={columns[idx].percentage} {...cell.getCellProps()}>
@@ -66,7 +92,7 @@ const TableWrapper = styled.table`
   td {
     display: inline-block;
     padding: 1rem 0.8rem;
-    min-width: 12rem;
+    min-width: 10rem;
     display: flex;
     justify-content: center;
     align-items: center;
