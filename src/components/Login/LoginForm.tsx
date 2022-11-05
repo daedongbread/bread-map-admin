@@ -1,5 +1,4 @@
 import React from 'react';
-import { useRequestLogin } from '@/apis';
 import { Input } from '@/components/Shared';
 import Check from '@/components/Shared/Icons/Check.svg';
 import CheckOrange from '@/components/Shared/Icons/CheckOrange.svg';
@@ -15,7 +14,6 @@ type Props = {
 };
 
 export const LoginForm = ({ form, onChangeForm, isRemembered, onToggleRemember }: Props) => {
-  console.log('form', form);
   return (
     <div>
       <Wrapper>

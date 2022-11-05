@@ -11,6 +11,7 @@ import Routes from '@/constants/routes';
 import useSelectBox from '@/hooks/useSelectBox';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
+  initializeForm,
   setForm,
   setLinks,
   changeForm,
@@ -25,22 +26,24 @@ import {
   removeMenu,
   addMenu,
   changeMenuImg,
+  toggleMenuTypeOption,
+  selectMenuTypeOption,
 } from '@/store/slices/bakery';
 
 import { color } from '@/styles';
+import { urlToBlob } from '@/utils';
 import styled from '@emotion/styled';
 
-export type BakeryForm = Omit<BakeryDetailEntity, 'status' | 'productList'> & {
+export type BakeryForm = Omit<BakeryDetailEntity, 'status'> & {
   status: BakeryStatus | null;
-  productList: (Omit<BakeryMenuEntity, 'image'> & {
-    image: string | null; // File 타입이 필요한가? 필요없다면 Omit 제거! 수정시에 menu img는 file or str (빈값), 데이터 내려올때 null일수 있음.
-  })[];
 };
 
 const options = [
   { name: '미게시', value: 'UNPOSTING', color: color.red },
   { name: '게시중', value: 'POSTING', color: color.green },
 ];
+
+const emptyFile = new Blob([''], { type: 'image/png' });
 // TODO: 10/11 토큰만료시 리다이렉트처리 필요...
 // TODO: 10/11 작성 & 수정 테스트 필요
 
@@ -49,7 +52,8 @@ export const BakeryDetailContainer = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const { form, formLinks, openedLinkIdx } = useAppSelector(selector => selector.bakery);
+  // opened state를 리덕스에 저장하면 안될거같은데..?
+  const { form, formLinks, openedLinkIdx, openedMenuTypeIdx } = useAppSelector(selector => selector.bakery);
   const { isOpen, selectedOption, onToggleSelectBox, onSelectOption } = useSelectBox(options[0]);
 
   const { bakery, loading } = useGetBakery({ bakeryId: Number(bakeryId) });
@@ -59,29 +63,106 @@ export const BakeryDetailContainer = () => {
   React.useEffect(() => {
     if (bakery) {
       dispatch(setForm({ form: bakery })); // image(bakery img 제거하기)
+      updateLinksAtForm();
+      onSelectOption(options.find(option => option.value === bakery.status) || null);
       if (bakery.image) {
         dispatch(changeBakeryImg({ imgPreview: bakery.image }));
       }
-      // setBakeryImg(bakery.image); // => image가 string으로 내려오면 File로?
+    } else {
+      dispatch(initializeForm());
     }
   }, [bakery]);
 
-  React.useEffect(() => {
-    if (bakery) {
-      // 나중에 이미지가없을때 기본 이미지 폼 추가해줄지 고민.. 그러면 업데이트시 예외처리 필요
-      onSelectOption(options.find(option => option.value === bakery.status)); // 초기값을 null이 아니라 미게시로 셋팅하면 될거같긴한데?
-    }
-  }, [bakery]);
-
-  React.useEffect(() => {
+  const updateLinksAtForm = () => {
     const links: { key: string; value: string }[] = [];
-    for (const [key, value] of Object.entries(form)) {
-      if (key.includes('URL')) {
-        links.push({ key, value: value as string });
+    if (bakery) {
+      for (const [key, value] of Object.entries(bakery)) {
+        if (key.includes('URL')) {
+          links.push({ key, value: value as string });
+        }
+      }
+      dispatch(setLinks({ links }));
+    }
+  };
+
+  const onSaveForm = async () => {
+    const formData = new FormData();
+
+    // link에 대한 순회
+    const linkPayload: { [key: string]: string } = {};
+    formLinks.forEach(link => {
+      linkPayload[link.key] = link.value;
+    });
+
+    // make request data
+    const copiedForm = { ...form };
+    const { image, productList, ...requestData } = copiedForm;
+    const productListExceptImage = productList.map(item => {
+      const { image, ...rest } = item;
+      return { ...rest };
+    });
+    const request = new Blob([JSON.stringify({ ...requestData, productList: productListExceptImage, ...linkPayload })], { type: 'application/json' });
+    formData.append('request', request);
+
+    // make productList (image) data
+    //이미지들은 원본데이터(original)와 달라졌을 경우만 아래로직들 실행하기.
+    //메뉴들의 순서가 바뀔수있으므로, 순회해서 target을 찾는다.
+    //빵 메뉴 이미지 순회,
+    // 빵메뉴가 없으면 append X, 빵메뉴가 없을때 productImageList = [] 로 보내면 에러가 난다.
+
+    if (form.productList.length) {
+      if (bakery) {
+        // 수정시
+        console.log('origin', origin);
+        for (const bread of form.productList) {
+          let file: File | Blob | string = '';
+          const target = bakery.productList.find(item => item.productId === bread.productId);
+          if (target) {
+            if (bread.image === target.image) {
+              file = target.image ? target.image : emptyFile;
+            } else {
+              file = bread.image ? await urlToBlob(bread.image as string, bread.productName) : emptyFile;
+            }
+          } else {
+            file = bread.image ? await urlToBlob(bread.image as string, bread.productName) : emptyFile;
+          }
+          formData.append('productImageList', file);
+        }
+      } else {
+        // 생성시
+        for (const bread of form.productList) {
+          const emptyBlob = new Blob([''], { type: 'image/png' });
+          const blob: Blob = bread.image ? await urlToBlob(bread.image as string, bread.productName) : emptyBlob;
+          formData.append('productImageList', blob);
+        }
       }
     }
-    dispatch(setLinks({ links }));
-  }, []);
+    // make bakeryImage data
+    // 빵집 이미지없으면 append X
+    if (form.image) {
+      let file: Blob | string = '';
+      if (bakery) {
+        if (form.image === bakery.image) {
+          // 기존 이미지를 바꾸지않았다면 그냥 string을 넣는다. 테스트 필요
+          file = bakery.image;
+        } else {
+          file = await urlToBlob(form.image, form.name);
+        }
+      } else {
+        file = await urlToBlob(form.image, form.name);
+      }
+
+      formData.append('bakeryImage', file);
+    }
+
+    const payload = await formData;
+    for (const [key, value] of payload) {
+      console.log(`${key}: ${value}`);
+    }
+
+    bakeryId ? onUpdateForm(payload) : onCreateForm(payload);
+    // onSaveForm(payload);
+  };
 
   const onChangeForm = (payload: { name: BakeryFormChangeKey; value: never }) => {
     dispatch(changeForm(payload));
@@ -115,6 +196,14 @@ export const BakeryDetailContainer = () => {
 
   const onAddLink = () => {
     dispatch(addLink());
+  };
+
+  const onToggleMenuTypeOption = (currIdx: number) => {
+    dispatch(toggleMenuTypeOption({ currIdx }));
+  };
+
+  const onSelectMenuTypeOption = ({ currIdx, optionValue }: { currIdx: number; optionValue: string }) => {
+    dispatch(selectMenuTypeOption({ currIdx, optionValue }));
   };
 
   const onChangeMenuInput = (payload: { currIdx: number; name: string; value: string }) => {
@@ -165,6 +254,7 @@ export const BakeryDetailContainer = () => {
         form={form}
         links={formLinks}
         openedLinkIdx={openedLinkIdx}
+        openedMenuTypeIdx={openedMenuTypeIdx}
         onChangeForm={onChangeForm}
         onChangeBakeryImg={onChangeBakeryImg}
         onToggleLinkOption={onToggleLinkOption}
@@ -173,11 +263,13 @@ export const BakeryDetailContainer = () => {
         onSetLinks={onSetLinks}
         onRemoveLink={onRemoveLink}
         onAddLink={onAddLink}
+        onToggleMenuTypeOption={onToggleMenuTypeOption}
+        onSelectMenuTypeOption={onSelectMenuTypeOption}
         onChangeMenuInput={onChangeMenuInput}
         onRemoveMenu={onRemoveMenu}
         onAddMenu={onAddMenu}
         onChangeMenuImg={onChangeMenuImg}
-        onSaveForm={bakeryId ? onUpdateForm : onCreateForm}
+        onSaveForm={onSaveForm}
       />
     </Container>
   );

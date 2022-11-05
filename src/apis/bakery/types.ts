@@ -9,8 +9,9 @@ export type BakeriesItemEntity = {
 };
 
 export type BakeryMenuEntity = {
-  breadId: number;
-  name: string;
+  productId: number;
+  productType: string;
+  productName: string;
   price: number;
   image: string | null;
 };

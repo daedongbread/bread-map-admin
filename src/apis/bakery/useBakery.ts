@@ -4,7 +4,7 @@ import { createBakery, getBakery, updateBakery } from './bakery';
 const useGetBakery = ({ bakeryId }: { bakeryId: number }) => {
   const queryKey = ['bakery', { bakeryId }] as const;
   const { data, isLoading, isError, refetch } = useQuery(queryKey, () => getBakery({ bakeryId }), {
-    enabled: Boolean(bakeryId),
+    enabled: !isNaN(bakeryId),
   });
 
   return {

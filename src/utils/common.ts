@@ -13,4 +13,8 @@ const urlToFile = async (url: string, fileName: string): Promise<File> => {
   return file;
 };
 
-export { urlToFile };
+const urlToBlob = async (url: string, fileName: string): Promise<Blob> => {
+  return await fetch(url).then(r => r.blob());
+};
+
+export { urlToFile, urlToBlob };

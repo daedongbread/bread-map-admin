@@ -5,7 +5,7 @@ import Routes from '@/constants/routes';
 import { Storage, userStorage } from '@/utils';
 import { rememberUser, removeUser, requestLogin, requestRefresh, saveUserToken } from './login';
 
-const EXPIRE_GAP = 2 * 60 * 1000;
+const EXPIRE_GAP = 5 * 60 * 1000;
 const EXPIRED_DATE = 60 * 60 * 1000;
 
 let REFRESH_TIME_OUT: ReturnType<typeof setTimeout> | null = null;

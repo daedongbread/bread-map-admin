@@ -7,13 +7,22 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 // 타입지정시 reducer type error..
 export type BakeryForm = BakeryDetailBaseEntity & {
   productList: {
-    breadId: number;
-    name: string;
+    productId?: number;
+    productType: string;
+    productName: string;
     price: number;
     image: string | null;
   }[];
   status: BakeryStatus | null;
   facilityInfoList: string[];
+};
+
+const initialProductItem = {
+  // productId: 0, 생성시에만 있음
+  productType: 'BREAD',
+  productName: '',
+  price: 0,
+  image: '', // 조회시에만 이미지 여기에 들어옴
 };
 
 const initialBakeryForm: BakeryForm = {
@@ -29,16 +38,16 @@ const initialBakeryForm: BakeryForm = {
   websiteURL: '',
   phoneNumber: '',
   facilityInfoList: [],
-  productList: [
-    {
-      breadId: 0, // 생성시에만 있음
-      name: '',
-      price: 0,
-      image: '', // 조회시에만 이미지 여기에 들어옴
-    },
-  ],
+  productList: [initialProductItem],
   status: 'UNPOSTING',
 };
+
+const initialBakeryLinks = [
+  { key: 'websiteURL', value: '' },
+  { key: 'instagramURL', value: '' },
+  { key: 'facebookURL', value: '' },
+  { key: 'blogURL', value: '' },
+];
 
 export type BakeryFormChangeKey = keyof BakeryDetailBaseEntity;
 
@@ -48,14 +57,16 @@ interface BakeryState {
   form: BakeryForm;
   formLinks: Link[];
   openedLinkIdx: number | null;
+  openedMenuTypeIdx: number | null;
 }
 
 const initialState: BakeryState = {
   loading: false,
   error: false,
   form: initialBakeryForm,
-  formLinks: [],
+  formLinks: initialBakeryLinks,
   openedLinkIdx: null,
+  openedMenuTypeIdx: null,
 };
 
 const bakerySlice = createSlice({
@@ -66,6 +77,10 @@ const bakerySlice = createSlice({
       // naver type 수정필요
       const { name, value } = action.payload;
       state.form[name] = value;
+    },
+    initializeForm(state) {
+      state.form = initialBakeryForm;
+      state.formLinks = initialBakeryLinks;
     },
     setForm(state, action: PayloadAction<{ form: BakeryDetailEntity }>) {
       const { form } = action.payload;
@@ -122,6 +137,22 @@ const bakerySlice = createSlice({
     addLink(state) {
       state.formLinks.push({ key: '', value: '' });
     },
+    toggleMenuTypeOption(state, action: PayloadAction<{ currIdx: number }>) {
+      const { openedMenuTypeIdx } = state;
+      console.log('openedMenuTypeIdx...', openedMenuTypeIdx, '/', action.payload);
+      const { currIdx } = action.payload;
+      if (currIdx === openedMenuTypeIdx) {
+        state.openedMenuTypeIdx = null;
+      } else {
+        state.openedMenuTypeIdx = currIdx;
+      }
+    },
+    selectMenuTypeOption(state, action: PayloadAction<{ currIdx: number; optionValue: SelectOption['value'] }>) {
+      // 동작이 되는가?
+      const { currIdx, optionValue } = action.payload;
+      const target = state.form.productList[currIdx];
+      state.form.productList.splice(currIdx, 1, { ...target, productType: optionValue });
+    },
     changeMenuInput(state, action: PayloadAction<{ currIdx: number; name: string; value: string }>) {
       const { currIdx, name, value } = action.payload;
       const target = state.form.productList[currIdx];
@@ -132,8 +163,7 @@ const bakerySlice = createSlice({
       state.form.productList = state.form.productList.filter((meu, idx) => idx !== currIdx);
     },
     addMenu(state) {
-      const breadId = 324; // random
-      state.form.productList.push({ breadId, name: '', price: 0, image: null });
+      state.form.productList.push(initialProductItem);
     },
     changeMenuImg(state, action: PayloadAction<{ currIdx: number; imgPreview: string }>) {
       const { currIdx, imgPreview } = action.payload;
@@ -146,6 +176,7 @@ const bakerySlice = createSlice({
 export default bakerySlice.reducer;
 export const {
   changeForm,
+  initializeForm,
   setForm,
   changeBakeryStatus,
   changeBakeryImg,
@@ -155,6 +186,8 @@ export const {
   setLinks,
   removeLink,
   addLink,
+  toggleMenuTypeOption,
+  selectMenuTypeOption,
   changeMenuInput,
   removeMenu,
   addMenu,

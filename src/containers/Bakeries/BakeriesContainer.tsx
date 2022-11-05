@@ -13,11 +13,13 @@ import styled from '@emotion/styled';
 
 export const BakeriesContainer = () => {
   const navigate = useNavigate();
+  const [searchText, setSearchText] = React.useState('');
+  const [word, setWord] = React.useState('');
   const { currPage, totalItemCount, leftPosition, onChangeTotalCount, onClickPage, onClickNext, onClickPrev, onClickEnd, onClickStart } = usePagination({
     perCount: PER_COUNT,
   });
 
-  const { data, error, loading, fetching } = useGetBakeries({ page: currPage });
+  const { data, error, loading, fetching, refetch } = useGetBakeries({ page: currPage });
   const bakeriesRow = data?.bakeries.map(bakery => ({ ...bakery, notification: '', status: formatPostStatusColumn(bakery.status) }));
   // 추후 알람영역 활성화
 
@@ -32,8 +34,21 @@ export const BakeriesContainer = () => {
     navigate(`${Routes.BAKERIES}/${bakeryId}`);
   };
 
+  const onChangeText = (text: string) => {
+    setSearchText(text);
+  };
+
+  // const onChangeWord = () => {
+  //   setWord(searchText);
+  // };
+
   const onClickCreate = () => {
     navigate(`${Routes.BAKERIES}/new`);
+  };
+
+  const onSearch = () => {
+    setWord(searchText);
+    refetch();
   };
 
   if (loading) {
@@ -52,7 +67,7 @@ export const BakeriesContainer = () => {
     <Container>
       <TopContainer>
         <SearchBarWrapper>
-          <SearchBar placeholder={'빵집 이름으로 검색하기'} />
+          <SearchBar placeholder={'빵집 이름으로 검색하기'} text={searchText} onChangeText={onChangeText} onSearch={onSearch} />
         </SearchBarWrapper>
         <Button text={'신규등록'} type={'orange'} btnSize={'medium'} onClickBtn={onClickCreate} />
       </TopContainer>

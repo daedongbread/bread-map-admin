@@ -3,18 +3,32 @@ import { Button } from '@/components/Shared';
 import { BakeryForm } from '@/containers/BakeryDetail';
 import { Row, RowContents } from '@/styles';
 import styled from '@emotion/styled';
+import { Option } from './LinkForm';
 import MenuItem from './MenuItem';
 
 type Props = {
   label: string;
   form: BakeryForm;
+  openedMenuTypeIdx: number | null;
+  onToggleMenuTypeOption: (currIdx: number) => void;
+  onSelectMenuTypeOption: (payload: { currIdx: number; optionValue: string }) => void;
   onChangeMenuInput: (payload: { currIdx: number; name: string; value: string }) => void;
   onRemoveMenu: (currIdx: number) => void;
   onAddMenu: () => void;
   onChangeMenuImg: ({ currIdx, e }: { currIdx: number; e: React.ChangeEvent<HTMLInputElement> }) => void;
 };
 
-export const MenuForm = ({ label, form, onChangeMenuInput, onRemoveMenu, onAddMenu, onChangeMenuImg }: Props) => {
+export const MenuForm = ({
+  label,
+  form,
+  openedMenuTypeIdx,
+  onToggleMenuTypeOption,
+  onSelectMenuTypeOption,
+  onChangeMenuInput,
+  onRemoveMenu,
+  onAddMenu,
+  onChangeMenuImg,
+}: Props) => {
   return (
     <Row alignTop>
       <label>{label}</label>
@@ -24,6 +38,10 @@ export const MenuForm = ({ label, form, onChangeMenuInput, onRemoveMenu, onAddMe
             key={`menu-${idx}`}
             idx={idx}
             menu={item}
+            productTypes={productTypes}
+            isOpenMenuType={openedMenuTypeIdx === idx}
+            onToggleMenuTypeOption={onToggleMenuTypeOption}
+            onSelectMenuTypeOption={onSelectMenuTypeOption}
             onChangeMenuInput={onChangeMenuInput}
             onRemoveMenu={onRemoveMenu}
             onChangeMenuImg={onChangeMenuImg}
@@ -36,6 +54,12 @@ export const MenuForm = ({ label, form, onChangeMenuInput, onRemoveMenu, onAddMe
     </Row>
   );
 };
+
+const productTypes: Option[] = [
+  { name: '빵', value: 'BREAD' },
+  { name: '야채', value: 'BEVERAGE' },
+  { name: '기타', value: 'ETC' },
+];
 
 const BtnWrapper = styled.div`
   border-top: ${({ theme }) => `1px solid ${theme.color.gray400}`};
