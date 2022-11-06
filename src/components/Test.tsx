@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 
-const Test: React.FC = () => {
+const Test = () => {
   return (
     <div>
       <div>test</div>
