@@ -30,9 +30,9 @@ const getId = (original: obj, route: Routes): number => {
 
 // TODO: 나중에 테이블컴포넌트 만들기
 export const Table = ({ route, columns, data, rowClickFn }: TableProps) => {
-  if (!data) {
-    throw new Error('Table component의 data가 없습니다.');
-  }
+  // if (!data) {
+  //   throw new Error('Table component의 data가 없습니다.');
+  // }
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({ columns, data });
 

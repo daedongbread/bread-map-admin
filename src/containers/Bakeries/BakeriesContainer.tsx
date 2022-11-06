@@ -1,13 +1,14 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Column } from 'react-table';
-import { useGetBakeries } from '@/apis';
+import { BakeriesItemEntity, useGetBakeries, useSearchBakeries } from '@/apis';
 import { BakeriesTable } from '@/components/Bakeries';
 import { Button, SearchBar, Pagination, CompleteStatus as Status } from '@/components/Shared';
 
 import Routes from '@/constants/routes';
 import usePagination from '@/hooks/usePagination';
 
+import usePrevious from '@/hooks/usePrevious';
 import { formatPostStatusColumn } from '@/utils';
 import styled from '@emotion/styled';
 
@@ -19,18 +20,39 @@ export const BakeriesContainer = () => {
     perCount: PER_COUNT,
   });
 
-  const { data, error, loading, fetching, refetch } = useGetBakeries({ page: currPage });
+  const { data, error } = useGetBakeries({ name: word, page: currPage });
+  const { data: searchData, error: searchErr } = useSearchBakeries({ name: word, page: currPage });
   const bakeriesRow = data?.bakeries.map(bakery => ({ ...bakery, notification: '', status: formatPostStatusColumn(bakery.status) }));
+  const searchBakeriesRow = searchData?.bakeries.map(bakery => ({ ...bakery, notification: '', status: formatPostStatusColumn(bakery.status) }));
+  const prevWord = usePrevious(word);
   // 추후 알람영역 활성화
 
+  const changeTotalCount = (data?: { bakeries: BakeriesItemEntity[]; totalCount: number }) => {
+    if (data && data.totalCount) {
+      onChangeTotalCount(data.totalCount);
+    }
+  };
+
   React.useEffect(() => {
-    if (data && data.totalCount) onChangeTotalCount(data.totalCount);
+    // data 로드 후 최초에만 실행되도록 변경하기
+    changeTotalCount(data);
   }, [data]);
 
-  const bakeryColumns = useMemo(() => COLUMNS, []);
+  React.useEffect(() => {
+    if (prevWord !== word) {
+      changeTotalCount(searchData);
+    }
+  }, [searchData]);
+
+  React.useEffect(() => {
+    if (prevWord !== word) {
+      onClickPage(0);
+    }
+  });
+
+  const bakeryColumns = React.useMemo(() => COLUMNS, []);
 
   const onClickBakeryItem = (bakeryId: number) => {
-    console.log('bakeryId', bakeryId);
     navigate(`${Routes.BAKERIES}/${bakeryId}`);
   };
 
@@ -38,30 +60,13 @@ export const BakeriesContainer = () => {
     setSearchText(text);
   };
 
-  // const onChangeWord = () => {
-  //   setWord(searchText);
-  // };
-
   const onClickCreate = () => {
     navigate(`${Routes.BAKERIES}/new`);
   };
 
   const onSearch = () => {
     setWord(searchText);
-    refetch();
   };
-
-  if (loading) {
-    return <div>로딩중..</div>; // 에러 화면 or 메세지 필요
-  }
-
-  if (fetching) {
-    return <div>fetching...</div>;
-  }
-
-  if (error || !bakeriesRow) {
-    return <div>error...</div>;
-  }
 
   return (
     <Container>
@@ -71,7 +76,14 @@ export const BakeriesContainer = () => {
         </SearchBarWrapper>
         <Button text={'신규등록'} type={'orange'} btnSize={'medium'} onClickBtn={onClickCreate} />
       </TopContainer>
-      <BakeriesTable route={Routes.BAKERIES} columns={bakeryColumns} data={bakeriesRow} rowClickFn={onClickBakeryItem} />
+
+      <BakeriesTable
+        route={Routes.BAKERIES}
+        columns={bakeryColumns}
+        data={(searchBakeriesRow && searchBakeriesRow) || (bakeriesRow && bakeriesRow) || []}
+        rowClickFn={onClickBakeryItem}
+      />
+
       <Pagination
         totalCount={totalItemCount}
         perCount={PER_COUNT}

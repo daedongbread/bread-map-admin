@@ -9,7 +9,6 @@ const useFileInput = () => {
   };
 
   const getSrc = (file: File | string | null) => {
-    // 서버에서 내려주는 img가 어떤형태인가?
     if (!file) return null;
 
     if (typeof file === 'string') {

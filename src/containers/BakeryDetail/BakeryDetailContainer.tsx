@@ -34,18 +34,12 @@ import { color } from '@/styles';
 import { urlToBlob } from '@/utils';
 import styled from '@emotion/styled';
 
-export type BakeryForm = Omit<BakeryDetailEntity, 'status'> & {
-  status: BakeryStatus | null;
-};
-
 const options = [
   { name: '미게시', value: 'UNPOSTING', color: color.red },
   { name: '게시중', value: 'POSTING', color: color.green },
 ];
 
 const emptyFile = new Blob([''], { type: 'image/png' });
-// TODO: 10/11 토큰만료시 리다이렉트처리 필요...
-// TODO: 10/11 작성 & 수정 테스트 필요
 
 export const BakeryDetailContainer = () => {
   const { bakeryId } = useParams();
@@ -274,10 +268,6 @@ export const BakeryDetailContainer = () => {
     </Container>
   );
 };
-
-// 새로 작성한다 = img = File
-// 받아온다 = img = str 인가?
-// 빵집 수정할때만 breadId가 존재한다.
 
 const Container = styled.div`
   min-height: 100vh;

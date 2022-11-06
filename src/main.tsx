@@ -13,7 +13,14 @@ import { GlobalStyle, theme } from './styles';
 
 const history = createBrowserHistory();
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 2 * 1000 * 60,
+      keepPreviousData: true,
+    },
+  },
+});
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <Provider store={store}>

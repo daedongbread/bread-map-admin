@@ -5,14 +5,17 @@ import styled from '@emotion/styled';
 
 type Props = {
   placeholder: string;
+  text: string;
+  onChangeText: (text: string) => void;
+  onSearch: () => void;
 };
 
-export const SearchBar = ({ placeholder }: Props) => {
+export const SearchBar = ({ placeholder, text, onChangeText, onSearch }: Props) => {
   return (
     <Container>
-      <Input placeholder={placeholder} type={'plain'} padding={'large'} />
+      <Input value={text} onChangeInput={e => onChangeText(e.target.value)} placeholder={placeholder} type={'plain'} padding={'large'} />
       <button>
-        <Search />
+        <Search onClick={onSearch} />
       </button>
     </Container>
   );
