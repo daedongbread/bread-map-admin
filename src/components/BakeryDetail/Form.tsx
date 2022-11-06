@@ -2,9 +2,8 @@ import React from 'react';
 
 import { BakeryDetailEntity } from '@/apis';
 import { Button } from '@/components/Shared';
-import { BakeryForm } from '@/containers/BakeryDetail';
 
-import { BakeryFormChangeKey } from '@/store/slices/bakery';
+import { BakeryForm, BakeryFormChangeKey } from '@/store/slices/bakery';
 import styled from '@emotion/styled';
 
 import { AddressForm } from './AddressForm';

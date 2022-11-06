@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/Shared';
-import { BakeryForm } from '@/containers/BakeryDetail';
+import { BakeryForm } from '@/store/slices/bakery';
 import { Row, RowContents } from '@/styles';
 import styled from '@emotion/styled';
 import { Option } from './LinkForm';

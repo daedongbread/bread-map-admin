@@ -20,12 +20,8 @@ export const BakeryReportDetailContainer = () => {
   const { reportId } = useParams();
   const navigate = useNavigate();
 
-  const { bakeryReport, error, loading, fetching } = useGetBakeryReport({ reportId: Number(reportId) });
+  const { bakeryReport, error } = useGetBakeryReport({ reportId: Number(reportId) });
   const { isOpen, selectedOption, onToggleSelectBox, onSelectOption } = useSelectBox(options[0]);
-
-  if (loading || fetching) return <div>로딩중..</div>;
-
-  if (error) return <div>에러..</div>;
 
   const onClickBack = () => {
     navigate(Routes.BAKERY_REPORT);

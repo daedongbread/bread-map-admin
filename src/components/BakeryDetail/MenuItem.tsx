@@ -11,7 +11,7 @@ import { Option } from './LinkForm';
 
 type Props = {
   idx: number;
-  menu: Omit<BakeryMenuEntity, 'image'> & { image: File | string | null };
+  menu: Omit<BakeryMenuEntity, 'productId'> & { productId?: number };
   productTypes: Option[];
   isOpenMenuType: boolean;
   onToggleMenuTypeOption: (currIdx: number) => void;

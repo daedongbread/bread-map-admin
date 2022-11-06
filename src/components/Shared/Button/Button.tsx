@@ -43,13 +43,16 @@ type ButtonProps = {
   btnSize?: Size;
   fontSize?: Size;
   icon?: React.ReactNode;
-  onClickBtn: () => void;
+  onClickBtn?: () => void;
 };
 
 export const Button = ({ type, text, btnSize, fontSize = 'small', icon, onClickBtn }: ButtonProps) => {
   const onClickCustomBtn = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    onClickBtn();
+
+    if (onClickBtn) {
+      onClickBtn();
+    }
   };
 
   const matchedStyle = Object.entries(buttons).find(([key]) => key === type);

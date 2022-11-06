@@ -1,5 +1,4 @@
 import { fetcher } from '@/apis/axios';
-import { Storage, storage } from '@/utils';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 

@@ -46,7 +46,7 @@ export type InputProps = {
   placeholder?: string;
   disabled?: boolean;
   textarea?: boolean;
-  onChangeInput: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onChangeInput?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   name?: string;
   value: string;
 };
@@ -60,7 +60,6 @@ export const Input = ({ textType, type, padding = 'small', placeholder, disabled
       <CustomTextarea
         disabled={disabled}
         name={name}
-        type={textType}
         value={value}
         onChange={onChangeInput}
         borderColor={matchedStyle[1].borderColor}
