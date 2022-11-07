@@ -1,5 +1,6 @@
 {
   "name": "bread-map-admin",
+  "homepage": "https://daedongbread.github.io/bread-map-admin/",
   "private": true,
   "version": "0.0.0",
   "scripts": {
