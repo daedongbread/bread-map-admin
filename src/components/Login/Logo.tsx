@@ -5,10 +5,10 @@ export const Logo = () => {
   return (
     <Container>
       <BreadLogo>
-        <img src="src/images/deabbang.png" />
+        <img src="/bread-map-admin/images/deabbang.png" />
       </BreadLogo>
       <TextLogo>
-        <img src="src/images/text-logo.png" />
+        <img src="/bread-map-admin/images/text-logo.png" />
       </TextLogo>
     </Container>
   );
