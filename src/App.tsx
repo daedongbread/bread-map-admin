@@ -1,45 +1,33 @@
-import { useState } from 'react'
-import logo from './logo.svg'
-import './App.css'
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useRequestRefresh } from '@/apis/auth/useRequestLogin';
 
-function App() {
-  const [count, setCount] = useState(0)
+import Routes from './constants/routes';
+import usePath from './hooks/usePath';
+import Route from './routes';
+import { Storage, userStorage } from './utils';
 
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
-  )
-}
+const App = () => {
+  const navigate = useNavigate();
+  const { mutateAsync } = useRequestRefresh();
+  const { getCurrPath } = usePath();
 
-export default App
+  // 추후 axios에서 처리하는걸로 변경하기
+  React.useEffect(() => {
+    const token = userStorage.getItem<{ accessToken: string; refreshToken: string }>(Storage.Token);
+    if (token) {
+      const { accessToken, refreshToken } = token;
+      mutateAsync({ accessToken, refreshToken });
+    } else {
+      if (getCurrPath() !== Routes.LOGIN) {
+        window.confirm('로그인이 필요합니다.');
+      }
+      navigate(Routes.LOGIN);
+      // redirect... router 내부에 넣어야 실행가능
+    }
+  }, [mutateAsync]);
+
+  return <Route />;
+};
+
+export default App;
