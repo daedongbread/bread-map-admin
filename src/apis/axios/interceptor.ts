@@ -1,5 +1,5 @@
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
-import Routes from '@/constants/routes';
+import { GhRoutes } from '@/constants/routes';
 import { rootNavigate } from '@/main';
 import { Storage, userStorage } from '@/utils';
 
@@ -33,7 +33,7 @@ export const resFailFn = (error: any) => {
   // error.code 체크? 요청할까?
   if (error.response.data.message === 'Invalid JWT') {
     window.confirm('장시간 사용하지않아 다시 로그인이 필요합니다.');
-    rootNavigate(Routes.LOGIN);
+    rootNavigate(GhRoutes.LOGIN);
   } else {
     console.log('err:', error.response);
   }

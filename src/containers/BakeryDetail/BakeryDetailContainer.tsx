@@ -6,7 +6,7 @@ import { useCreateBakery, useGetBakery, useUpdateBakery } from '@/apis/bakery/us
 import { Form } from '@/components/BakeryDetail';
 import { Link } from '@/components/BakeryDetail/LinkForm';
 import { Button, SelectBox, StatusSelectTrigger, StatusSelectOption } from '@/components/Shared';
-import Routes from '@/constants/routes';
+import { GhRoutes } from '@/constants/routes';
 
 import useSelectBox from '@/hooks/useSelectBox';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
@@ -230,7 +230,7 @@ export const BakeryDetailContainer = () => {
   };
 
   const onClickBack = () => {
-    navigate(Routes.BAKERIES);
+    navigate(GhRoutes.BAKERIES);
   };
 
   return (

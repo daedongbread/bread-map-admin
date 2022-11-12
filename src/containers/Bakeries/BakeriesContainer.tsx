@@ -5,7 +5,7 @@ import { BakeriesItemEntity, useGetBakeries, useSearchBakeries } from '@/apis';
 import { BakeriesTable } from '@/components/Bakeries';
 import { Button, SearchBar, Pagination, CompleteStatus as Status } from '@/components/Shared';
 
-import Routes from '@/constants/routes';
+import { GhRoutes } from '@/constants/routes';
 import usePagination from '@/hooks/usePagination';
 
 import usePrevious from '@/hooks/usePrevious';
@@ -53,7 +53,7 @@ export const BakeriesContainer = () => {
   const bakeryColumns = React.useMemo(() => COLUMNS, []);
 
   const onClickBakeryItem = (bakeryId: number) => {
-    navigate(`${Routes.BAKERIES}/${bakeryId}`);
+    navigate(`${GhRoutes.BAKERIES}/${bakeryId}`);
   };
 
   const onChangeText = (text: string) => {
@@ -61,7 +61,7 @@ export const BakeriesContainer = () => {
   };
 
   const onClickCreate = () => {
-    navigate(`${Routes.BAKERIES}/new`);
+    navigate(`${GhRoutes.BAKERIES}/new`);
   };
 
   const onSearch = () => {
@@ -78,7 +78,7 @@ export const BakeriesContainer = () => {
       </TopContainer>
 
       <BakeriesTable
-        route={Routes.BAKERIES}
+        route={GhRoutes.BAKERIES}
         columns={bakeryColumns}
         data={(searchBakeriesRow && searchBakeriesRow) || (bakeriesRow && bakeriesRow) || []}
         rowClickFn={onClickBakeryItem}

@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRequestRefresh } from '@/apis/auth/useRequestLogin';
 
-import Routes from './constants/routes';
+import { useRequestRefresh } from './apis';
+import { GhRoutes } from './constants/routes';
 import usePath from './hooks/usePath';
 import Route from './routes';
 import { Storage, userStorage } from './utils';
@@ -19,10 +19,10 @@ const App = () => {
       const { accessToken, refreshToken } = token;
       mutateAsync({ accessToken, refreshToken });
     } else {
-      if (getCurrPath() !== Routes.LOGIN) {
+      if (getCurrPath() !== GhRoutes.LOGIN) {
         window.confirm('로그인이 필요합니다.');
       }
-      navigate(Routes.LOGIN);
+      navigate(GhRoutes.LOGIN);
       // redirect... router 내부에 넣어야 실행가능
     }
   }, [mutateAsync]);

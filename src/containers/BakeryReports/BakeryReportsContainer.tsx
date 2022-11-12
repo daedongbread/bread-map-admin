@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Column } from 'react-table';
-import { useGetBakeries, useGetBakeryReports } from '@/apis';
+import { useGetBakeryReports } from '@/apis';
 import { BakeryReportsTable } from '@/components/BakeryReports';
-import { Button, SearchBar, Pagination, CompleteStatus as Status } from '@/components/Shared';
+import { Pagination, CompleteStatus as Status } from '@/components/Shared';
 
 import { Header } from '@/components/Shared/Header';
-import Routes from '@/constants/routes';
+import { GhRoutes } from '@/constants/routes';
 import usePagination from '@/hooks/usePagination';
 
 import { formatReflectStatusColumn } from '@/utils';
@@ -28,7 +28,7 @@ export const BakeryReportsContainer = () => {
   const bakeryReportsColumns = useMemo(() => COLUMNS, []);
 
   const onClickRequestItem = (reportId: number) => {
-    navigate(`${Routes.BAKERY_REPORT}/${reportId}`);
+    navigate(`${GhRoutes.BAKERY_REPORT}/${reportId}`);
   };
 
   if (loading) {
@@ -47,7 +47,7 @@ export const BakeryReportsContainer = () => {
     <>
       <Header name={'제보관리'} />
       <Container>
-        <BakeryReportsTable route={Routes.BAKERY_REPORT} columns={bakeryReportsColumns} data={bakeryReportsRow} rowClickFn={onClickRequestItem} />
+        <BakeryReportsTable route={GhRoutes.BAKERY_REPORT} columns={bakeryReportsColumns} data={bakeryReportsRow} rowClickFn={onClickRequestItem} />
         <Pagination
           totalCount={totalItemCount}
           perCount={PER_COUNT}
