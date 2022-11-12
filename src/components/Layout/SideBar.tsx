@@ -1,14 +1,14 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Frown, Pencil, Server, Users } from '@/components/Shared/Icons';
-import Routes from '@/constants/routes';
+import { GhRoutes } from '@/constants/routes';
 import styled from '@emotion/styled';
 import { MenuItem } from './MenuItem';
 
 export const SideBar = () => {
   const location = useLocation();
 
-  const isCurrent = (path: Routes) => {
+  const isCurrent = (path: GhRoutes) => {
     const url = location.pathname;
     const detailRegex = /(\/.*)(?:\/)\w/;
     const regex = /(\/.*)/;
@@ -36,25 +36,25 @@ export const SideBar = () => {
 const SidebarMenu = [
   {
     name: '제보관리',
-    path: Routes.BAKERY_REPORT,
+    path: GhRoutes.BAKERY_REPORT,
     icon: <Pencil />,
     noti: 43,
   },
   {
     name: '빵집관리',
-    path: Routes.BAKERIES,
+    path: GhRoutes.BAKERIES,
     icon: <Server />,
     noti: 141,
   },
   {
     name: '신고목록',
-    path: Routes.USER_REPORT,
+    path: GhRoutes.USER_REPORT,
     icon: <Frown />,
     noti: 0,
   },
   {
     name: '사용자관리',
-    path: Routes.USERS,
+    path: GhRoutes.USERS,
     icon: <Users />,
     noti: 0,
   },
