@@ -1,6 +1,6 @@
 import React from 'react';
 import { Cell, HeaderGroup, Row, useTable } from 'react-table';
-import Routes from '@/constants/routes';
+import { GhRoutes } from '@/constants/routes';
 import styled from '@emotion/styled';
 import { TableProps } from './types';
 
@@ -8,15 +8,13 @@ type obj = {
   [key: string]: any;
 };
 
-const getId = (original: obj, route: Routes): number => {
+const getId = (original: obj, route: GhRoutes): number => {
   let id: number;
-  console.log('route', route);
   switch (route) {
-    case Routes.BAKERIES:
+    case GhRoutes.BAKERIES:
       id = original.bakeryId;
-      console.log('--. ', id);
       break;
-    case Routes.BAKERY_REPORT:
+    case GhRoutes.BAKERY_REPORT:
       id = original.reportId;
       console.log(id);
       break;

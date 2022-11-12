@@ -4,7 +4,7 @@ import { useGetBakeryReport } from '@/apis';
 import { Report } from '@/components/BakeryReportDetail';
 import { Button, SelectBox, StatusSelectOption, StatusSelectTrigger } from '@/components/Shared';
 import { Header } from '@/components/Shared/Header';
-import Routes from '@/constants/routes';
+import { GhRoutes } from '@/constants/routes';
 import useSelectBox from '@/hooks/useSelectBox';
 import { color } from '@/styles';
 import { extractContentsWithType } from '@/utils';
@@ -24,11 +24,11 @@ export const BakeryReportDetailContainer = () => {
   const { isOpen, selectedOption, onToggleSelectBox, onSelectOption } = useSelectBox(options[0]);
 
   const onClickBack = () => {
-    navigate(Routes.BAKERY_REPORT);
+    navigate(GhRoutes.BAKERY_REPORT);
   };
 
   const onClickAddBakery = () => {
-    navigate(`${Routes.BAKERIES}/new`);
+    navigate(`${GhRoutes.BAKERIES}/new`);
   };
 
   return (
