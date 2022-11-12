@@ -1,8 +1,8 @@
 import { Column } from 'react-table';
-import Routes from '@/constants/routes';
+import { GhRoutes } from '@/constants/routes';
 
 export type TableProps = {
-  route: Routes;
+  route: GhRoutes;
   columns: readonly (Column & { percentage: number })[];
   data: readonly object[];
   rowClickFn?: (id: number) => void;
